@@ -1,11 +1,10 @@
 {
   "d4rks0ul": {
     "password": "qwerty1you",
-    "incomingRequests": [
-      "pookiebear67"
-    ],
+    "incomingRequests": [],
     "friendsList": [
-      "darky"
+      "darky",
+      "pookiebear67"
     ],
     "chatLogs": {
       "darky": [
@@ -48,7 +47,9 @@
   "pookiebear67": {
     "password": "pookiebear167",
     "incomingRequests": [],
-    "friendsList": [],
+    "friendsList": [
+      "d4rks0ul"
+    ],
     "chatLogs": {}
   }
 }
