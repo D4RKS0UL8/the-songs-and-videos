@@ -5,7 +5,15 @@
     "friendsList": [
       "darky"
     ],
-    "chatLogs": {}
+    "chatLogs": {
+      "darky": [
+        {
+          "name": "darky",
+          "input": "YOOOOO",
+          "datetime": "06/07/2026 20:58"
+        }
+      ]
+    }
   },
   "darky": {
     "password": "darky1",
@@ -13,6 +21,14 @@
     "friendsList": [
       "d4rks0ul"
     ],
-    "chatLogs": {}
+    "chatLogs": {
+      "d4rks0ul": [
+        {
+          "name": "darky",
+          "input": "YOOOOO",
+          "datetime": "06/07/2026 20:58"
+        }
+      ]
+    }
   }
 }
