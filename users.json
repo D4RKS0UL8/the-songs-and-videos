@@ -1,4 +1,11 @@
 {
   "d4rks0ul": "qwerty1you",
-  "darky": "darky1"
+  "darky": {
+    "password": "darky1",
+    "incomingRequests": [
+      "d4rks0ul"
+    ],
+    "friendsList": [],
+    "chatLogs": {}
+  }
 }
