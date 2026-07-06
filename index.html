@@ -10,10 +10,9 @@
     <style>
         @font-face {
                 font-family: 'SFProDisplay';
-                src: url('SFProDisplay-Bold.otf'); /* Make sure the file name matches exactly */
+                src: url('SFProDisplay-Bold.otf');
         }
 
-        /* Apply style only to this specific class */
         .angelone-header {
                 font-family: 'ANGELONE', sans-serif !important;
                 color: #D62D2D; 
@@ -31,36 +30,24 @@
                 flex-direction: column; 
                 align-items: center; 
                 margin: 0; 
-
-                /* --- ANIMATED AMBIENT MESH GRID --- */
-                background-color: #0b0c10; /* Elegant dark baseline */
+                background-color: #0b0c10;
                 background-image: 
-                        radial-gradient(at 10% 20%, rgba(212, 175, 55, 0.26) 0px, transparent 45%),   /* Faint Golden top-left */
-                        radial-gradient(at 90% 10%, rgba(153, 0, 0, 0.22) 0px, transparent 50%),   /* Soft Blue top-right */
-                        radial-gradient(at 80% 80%, rgba(196, 212, 55, 0.08) 0px, transparent 45%),   /* Warm Gold mid-right */
-                        radial-gradient(at 20% 85%, rgba(90, 31, 70, 0.07) 0px, transparent 50%);    /* Vivid Electric Blue bottom-left */
-                
+                        radial-gradient(at 10% 20%, rgba(212, 175, 55, 0.26) 0px, transparent 45%),
+                        radial-gradient(at 90% 10%, rgba(153, 0, 0, 0.22) 0px, transparent 50%),
+                        radial-gradient(at 80% 80%, rgba(196, 212, 55, 0.08) 0px, transparent 45%),
+                        radial-gradient(at 20% 85%, rgba(90, 31, 70, 0.07) 0px, transparent 50%);
                 background-attachment: fixed;
-                background-size: 200% 200%; /* Expands space for smooth structural movement */
+                background-size: 200% 200%;
                 animation: appleMeshAnimation 25s ease infinite alternate;
         }
 
-        /* --- THE MOTION ENGINE --- */
         @keyframes appleMeshAnimation {
-                0% {
-                        background-position: 0% 15%;
-                }
-                50% {
-                        background-position: 100% 85%;
-                }
-                100% {
-                        background-position: 30% 0%;
-                }
+                0% { background-position: 0% 15%; }
+                50% { background-position: 100% 85%; }
+                100% { background-position: 30% 0%; }
         }
         #file-list { width: 100%; max-width: 500px; }
 
-        /* --- DYNAMIC APPLE INTERACTIVE BORDER CARD --- */
-/* --- DYNAMIC APPLE INTERACTIVE BORDER CARD --- */
         .file-card {
                 background: linear-gradient(135deg, rgba(20, 20, 25, 0.7) 0%, rgba(10, 10, 12, 0.85) 100%);
                 margin: 25px 0;
@@ -73,39 +60,25 @@
                 flex-direction: column; 
                 gap: 12px; 
                 border: 1px solid rgba(255, 255, 255, 0.02); 
-                box-shadow: 
-                        0 20px 40px rgba(0, 0, 0, 0.7), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.1),
-                        inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
                 backdrop-filter: blur(16px) saturate(140%);
-
                 outline: none !important;
                 -webkit-tap-highlight-color: transparent !important;
-                
-                /* --- THE ULTIMATE FIX: CLIPS THE OVERSIZED AUDIO BORDERS --- */
                 overflow: hidden !important; 
         }
 
-        /* The Apple Mouse Hover Masking Layer */
-.file-card::before {
+        .file-card::before {
                 content: "";
                 position: absolute;
                 inset: 0; 
                 border-radius: 20px;
-                /* Creates a soft, feathered ball of light that tracks the mouse */
-                background: radial-gradient(
-                        230px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-                        rgba(255, 255, 255, 0.08) 0%,
-                        rgba(255, 255, 255, 0.03) 40%,
-                        transparent 70%
-                );
+                background: radial-gradient(230px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 70%);
                 pointer-events: none;
                 transition: opacity 0.3s ease;
                 opacity: 0;
                 z-index: 1;
         }
 
-        /* Legal Footer Styling */
         .legal-footer {
                 text-align: center;
                 padding: 40px 0 20px 0;
@@ -117,36 +90,12 @@
                 width: 100%;
         }
 
-        /* Normal card hover: border instantly wakes up and tracks */
-        .file-card:hover::before {
-                opacity: 1;
-                transition: opacity 0.2s ease;
-        }
+        .file-card:hover::before { opacity: 1; transition: opacity 0.2s ease; }
+        .file-card:hover { transform: translateY(-9px) scale(1.01); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 255, 255, 0.03), inset 0 1px 2px rgba(255, 255, 255, 0.2); }
+        .file-name { font-family: 'SFProDisplay', sans-serif !important; font-weight: bold; margin: 0; display: block; font-size: 1.15rem; color: #f5f5f7; letter-spacing: 1px; }
 
-
-        .file-card:hover {
-                transform: translateY(-9px) scale(1.01);
-                box-shadow: 
-                        0 25px 50px rgba(0, 0, 0, 0.85), 
-                        0 0 30px rgba(255, 255, 255, 0.03),
-                        inset 0 1px 2px rgba(255, 255, 255, 0.2);
-        }
-
-        .file-name { 
-                font-family: 'SFProDisplay', sans-serif !important;
-                font-weight: bold; 
-                margin: 0; 
-                display: block; 
-                font-size: 1.15rem; 
-                color: #f5f5f7; 
-                letter-spacing: 1px;
-        }
-
-        /* --- THE FIX: SUGGESTED TEXT POSITIONED BELOW --- */
         .suggestion-tag {
                 position: relative;
-                top: auto;
-                right: auto;
                 align-self: flex-start;
                 font-size: 10px;
                 font-weight: 900;
@@ -156,9 +105,6 @@
                 text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
                 margin-bottom: 5px;
         }
-
-        /* --- REAL PLASTIC PILL AUDIO PLAYER --- */
-/* --- REAL PLASTIC PILL AUDIO PLAYER --- */
 
         audio {
                 width: 100%;
@@ -170,103 +116,51 @@
                 z-index: 2;
                 transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
                 opacity: 0.9;
-                background: transparent !important; /* Let the enclosure panel handle the color */
-                
-                /* Ambient back-glow surrounding the outer oval layer */
+                background: transparent !important;
                 box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
         }
 
-        /* Target the actual inner control capsule wrapper directly */
         audio::-webkit-media-controls-enclosure {
                 background-color: rgba(255, 255, 255, 0.092) !important;
                 border-radius: 60px;
                 padding: 0 11px;
-                
-                /* Glass Reflections & Internal Shimmer */
-                box-shadow: 
-                        inset 0 1px 0px rgba(255, 255, 255, 0.145),              /* Shiny top edge */
-                        inset 0 -1px 1px rgba(0, 0, 0, 0.315);                   /* Grounded bottom edge */
-
-                /* Premium Apple Glass Frosty Texture */
+                box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.145), inset 0 -1px 1px rgba(0, 0, 0, 0.315);
                 backdrop-filter: blur(215px) saturate(100%) !important;
                 -webkit-backdrop-filter: blur(125px) saturate(100%) !important;
         }
 
-        /* Clean contrast adjustments for control elements/text inside the panel */
-        audio::-webkit-media-controls-panel {
-                filter: invert(100%) hue-rotate(300deg) brightness(0.63) contrast(1);
-        }
+        audio::-webkit-media-controls-panel { filter: invert(100%) hue-rotate(300deg) brightness(0.63) contrast(1); }
+        audio:hover { opacity: 1; box-shadow: 0 0 30px rgba(255, 255, 255, 0.18); }
+        audio:hover::-webkit-media-controls-enclosure { background-color: rgba(255, 255, 255, 0.18) !important; box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(0, 0, 0, 0.2); }
 
-        /* Container interactions */
-        audio:hover { 
-                opacity: 1;
-                box-shadow: 0 0 30px rgba(255, 255, 255, 0.18);
-        }
+        .ripple { position: absolute; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transform: scale(0); animation: ripple-animation 0.5s ease-out; pointer-events: none; }
+        @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
-        audio:hover::-webkit-media-controls-enclosure {
-                background-color: rgba(255, 255, 255, 0.18) !important;
-                box-shadow: 
-                        inset 0 1px 0px rgba(255, 255, 255, 0.6), 
-                        inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Ripple Effect Base Style */
-        .ripple {
-                position: absolute;
-                background: rgba(255, 255, 255, 0.4);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple-animation 0.5s ease-out;
-                pointer-events: none;
-        }
-        @keyframes ripple-animation {
-                to { transform: scale(4); opacity: 0; }
-        }
-
-        /* --- THE NEW DISCORD BUTTON --- */
         #discord-btn {
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
-                background: #5865F2; /* Discord Blurple */
+                background: #5865F2;
                 color: white;
                 padding: 10px 15px;
-                border-radius: 50px; /* Capsule shape */
+                border-radius: 50px;
                 display: flex;
                 align-items: center;
                 text-decoration: none;
-                
-                /* --- APPLE FONT LINKING --- */
                 font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
                 font-weight: 700 !important; 
-                letter-spacing: -0.2px; /* Tight Apple kerning */
-                
+                letter-spacing: -0.2px;
                 font-size: 14px;
                 box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
                 border: 2px solid transparent;
                 transition: all 0.3s ease;
-                z-index: 1000; /* Stays on top */
-                overflow: hidden; /* Clips the ripple */
+                z-index: 1000;
+                overflow: hidden;
         }
-        #discord-btn img {
-                width: 20px;
-                height: 20px;
-                margin-right: 10px;
-        }
+        #discord-btn img { width: 20px; height: 20px; margin-right: 10px; }
+        #discord-btn:hover { box-shadow: 0 0 25px rgba(88, 101, 242, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
+        #discord-btn .ripple { background: rgba(255, 255, 255, 0.6); }
 
-        /* Interactive Discord Glow on Hover/Touch */
-        #discord-btn:hover {
-                box-shadow: 0 0 25px rgba(88, 101, 242, 0.8); /* Intense Purple Glow */
-                border-color: rgba(255, 255, 255, 0.2);
-                transform: translateY(-3px) scale(1.05);
-        }
-        
-        /* Specific Ripple for the Purple Button */
-        #discord-btn .ripple {
-                background: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Section Styling */
         .section-header {
                 width: 100%;
                 max-width: 500px;
@@ -280,14 +174,7 @@
                 text-transform: uppercase;
         }
 
-        /* Video Player Styling */
-        video {
-                width: 100%;
-                border-radius: 8px;
-                margin-top: 10px;
-                background: #000;
-                box-shadow: 0 0 15px rgba(0,0,0,0.5);
-        }
+        video { width: 100%; border-radius: 8px; margin-top: 10px; background: #000; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -300,56 +187,57 @@
     </a>
 
 <script>
-        // --- CONFIGURATION ---
         const GITHUB_USERNAME = 'D4RKS0UL8';
         const REPO_NAME = 'the-songs-and-videos';
         
-        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents`;
-
-        const ceartions = [
-            "Someone Like You - D4RKS0UL_8.m4a"
-];
-
-        const suggestions = {
-            "Tek It - Cafun.mp3": "M <3",
-            "Riot - Three Days Grace.mp3": "Jadis",
-            "Last Kiss - Pearl Jam.mp3": "Anastasia",
-            "Achilles Come Down.mp3": "M <3",
-            "Мы верим.mp3": "S",
-            "Ocean Side - $uicideBoy$.mp3": "J",
-            "Superstar.mp3": "SLIMZ",
-            "Give A Ni$$a A Break.mp3": "fatsamslim",
-            "MONTAGEM FEARLESS SUPER SLOWED.mp3": "DaddyFerox",
-            "Moonlight on the River.mp3": "Fluxcxhum"
-        };
-
-        // --- DISCORD CDN VIDEO LINK INTEGRATION ---
-        const discordVideos = [
-            {
-                name: "Holy_Edit1.mp4",
-                url: "https://cdn.discordapp.com/attachments/1475185529459970171/1513651109690871888/Download_1.mp4?ex=6a2880f2&is=6a272f72&hm=fb708393135a7a6cf519226fe7b15716627b2db1db17f7c45866339fd45f6b36&",
-                suggestedBy: "" 
-            },
-                 {
-                name: "Holy_Edit2.mp4",
-                url: "https://cdn.discordapp.com/attachments/1448049536600772911/1513667676952596660/youtube-wICuistVQXY.dc440ae2.mp4?ex=6a289060&is=6a273ee0&hm=8bb01511e6d16e346ea061bc2c362af773cc7f72e9a44d717e4a1872315f86e3&",
-                suggestedBy: "" 
-            },
-                 {
-                name: "Holy_Edit.mp4",
-                url: "https://cdn.discordapp.com/attachments/1448049536600772911/1513666515122126938/services-instagram-post-DVgFbLMiPhw-0.db7d408f.mp4?ex=6a288f4b&is=6a273dcb&hm=b9a2efea5438f288730425662697a7d9bb18935dcc3d1915c386409d583fbf35&",
-                suggestedBy: "" 
-            },
-            {
-                name: "Newedit1.mp4",
-                url: "https://www.youtube.com/watch?v=iDlPvfGpMro",
-                suggestedBy: ""
-            }
+        // --- MANUALLY FIXED DATA MATRICES TO PREVENT API LOCKOUTS ---
+        const normalSongs = [
+            { name: "Achilles Come Down.mp3", suggester: "M <3" },
+            { name: "As It Was.mp3" },
+            { name: "Blissful - Txmy.m4a" },
+            { name: "Calvin Harris, Jazzy - Sat.mp3" },
+            { name: "DIE OF DEATH OST_ REV.mp3" },
+            { name: "Dancin.mp3" },
+            { name: "Falling Down - Lil Peep X.mp3" },
+            { name: "Last Kiss - Pearl Jam.mp3", suggester: "Anastasia" },
+            { name: "Moonlight on the River.mp3", suggester: "Fluxcxhum" },
+            { name: "Мы верим.mp3", suggester: "S" },
+            { name: "Nightcall Drive.mp3" },
+            { name: "Nightcore - After Dark.mp3" },
+            { name: "NOTION.mp3" },
+            { name: "Ocean Side - $uicideBoy$.mp3", suggester: "J" },
+            { name: "Someone Like You - D4RKS0UL_8.m4a" },
+            { name: "Superstar.mp3", suggester: "SLIMZ" },
+            { name: "Sweater Weather.mp3" },
+            { name: "Tek It - Cafun.mp3", suggester: "M <3" },
+            { name: "The Perfect Girl.mp3" }
         ];
 
-        // Global tracker for handling active stream isolation
-        let currentlyPlayingMedia = null;
+        const heavySongs = [
+            { name: "CHRISTMAS FUNK (Slo.mp3" },
+            { name: "did i tell u that i miss u.mp3" },
+            { name: "FINAL_ROUND_SUPER_S.mp3" },
+            { name: "FUNK TROPICAL (SLOW.mp3" },
+            { name: "Give A Ni$$a A Break.mp3", suggester: "fatsamslim" },
+            { name: "MONTAGEM FEARLESS SUPER SLOWED.mp3", suggester: "DaddyFerox" },
+            { name: "mutilator (slowed).mp3" },
+            { name: "NOOT NOOT FUNK (Sup.mp3" },
+            { name: "Riot - Three Days Grace.mp3", suggester: "Jadis" },
+            { name: "TOCA PESADO.mp3" },
+            { name: "TOMA NA MENTE.mp3" },
+            { name: "TRETAMENTO.mp3" },
+            { name: "Z-SENTAR.mp3" },
+            { name: "ZAYLO_-_MONTAGEM_U.mp3" }
+        ];
 
+        const discordVideos = [
+            { name: "Holy_Edit1.mp4", url: "https://cdn.discordapp.com/attachments/1475185529459970171/1513651109690871888/Download_1.mp4?ex=6a2880f2&is=6a272f72&hm=fb708393135a7a6cf519226fe7b15716627b2db1db17f7c45866339fd45f6b36&" },
+            { name: "Holy_Edit2.mp4", url: "https://cdn.discordapp.com/attachments/1448049536600772911/1513667676952596660/youtube-wICuistVQXY.dc440ae2.mp4?ex=6a289060&is=6a273ee0&hm=8bb01511e6d16e346ea061bc2c362af773cc7f72e9a44d717e4a1872315f86e3&" },
+            { name: "Holy_Edit.mp4", url: "https://cdn.discordapp.com/attachments/1448049536600772911/1513666515122126938/services-instagram-post-DVgFbLMiPhw-0.db7d408f.mp4?ex=6a288f4b&is=6a273dcb&hm=b9a2efea5438f288730425662697a7d9bb18935dcc3d1915c386409d583fbf35&" },
+            { name: "Newedit1.mp4", url: "https://www.youtube.com/watch?v=iDlPvfGpMro" }
+        ];
+
+        let currentlyPlayingMedia = null;
         const container = document.getElementById('file-list');
 
         function buildSectionHeader(title) {
@@ -359,15 +247,14 @@
             container.appendChild(header);
         }
 
-        function createCard(file, type, customUrl = null, customSuggestion = null) {
+        function createCard(file, type, customUrl = null) {
             const card = document.createElement('div');
             card.className = 'file-card';
             
-            const suggester = customSuggestion || suggestions[file.name];
-            if (suggester) {
+            if (file.suggester) {
                 const tag = document.createElement('div');
                 tag.className = 'suggestion-tag';
-                tag.innerText = "Suggested by: " + suggester;
+                tag.innerText = "Suggested by: " + file.suggester;
                 card.appendChild(tag);
             }
 
@@ -384,10 +271,9 @@
             player.preload = "metadata";
             card.appendChild(player);
 
-            // --- ONE SONG AT A TIME LOGIC ENGINE ---
             player.addEventListener('play', function() {
                 if (currentlyPlayingMedia && currentlyPlayingMedia !== player) {
-                    currentlyPlayingMedia.pause(); // Leaves it frozen exactly at its current timestamp
+                    currentlyPlayingMedia.pause();
                 }
                 currentlyPlayingMedia = player;
             });
@@ -415,68 +301,24 @@
             container.appendChild(card);
         }
 
-        async function loadRepositoryManifest() {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error('Repository data unavailable');
-                
-                const files = await response.json();
-                container.innerHTML = ''; 
+        function loadStaticLayout() {
+            container.innerHTML = ''; 
 
-                // Filter 1: Audio files that DO NOT contain Funk or Montagem keywords
-                const songs = files.filter(f => 
-                    (f.name.endsWith('.mp3') || f.name.endsWith('.m4a') || f.name.endsWith('.wav')) &&
-                    !f.name.toLowerCase().includes('funk') && 
-                    !f.name.toLowerCase().includes('montagem') &&
-                    !f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') &&
-                    !f.name.includes('HOLLOW') &&
-                    !f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') &&
-                    !f.name.includes('Z-SENTAR') && !f.name.includes('TOCA PESADO') && 
-                    !f.name.includes('JOGO MORTO') && !f.name.includes('TOMA NA MENTE') &&
-                    !f.name.includes('TRETAMENTO')
-                );
+            if (normalSongs.length > 0) {
+                buildSectionHeader('— 01 Music Stream —');
+                normalSongs.forEach(file => createCard(file, 'audio'));
+            }
 
-                // Filter 2: Explicitly group Funk, Montagem, and short titles together
-                const songies = files.filter(f => 
-                    (f.name.endsWith('.mp3') || f.name.endsWith('.m4a') || f.name.endsWith('.wav')) &&
-                    (f.name.toLowerCase().includes('funk') || 
-                     f.name.toLowerCase().includes('montagem') ||
-                     f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
-                     f.name.includes('HOLLOW') ||
-                     f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
-                     f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
-                     f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
-                     f.name.includes('TRETAMENTO'))
-                );
+            if (heavySongs.length > 0) {
+                buildSectionHeader('— 02 Music Stream —');
+                heavySongs.forEach(file => createCard(file, 'audio'));
+            }
 
-                const gitHubVideos = files.filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov'));
-
-                // Render Section 1
-                if (songs.length > 0) {
-                    buildSectionHeader('— 01 Music Stream —');
-                    songs.forEach(file => createCard(file, 'audio'));
-                }
-
-                // Render Section 2
-                if (songies.length > 0) {
-                    buildSectionHeader('— 02 Music Stream —');
-                    songies.forEach(file => createCard(file, 'audio'));
-                }
-
-                // Render Section 3
-                if (gitHubVideos.length > 0 || discordVideos.length > 0) {
-                    buildSectionHeader('— 03 Video Vault —');
-                    
-                    gitHubVideos.forEach(file => createCard(file, 'video'));
-                    
-                    discordVideos.forEach(vid => {
-                        createCard({ name: vid.name }, 'video', vid.url, vid.suggestedBy);
-                    });
-                }
-
-            } catch (error) {
-                console.error('Error sorting tracks:', error);
-                container.innerHTML = '<div class="section-header" style="color:#ff453a; border-color:#ff453a;">CONNECTION ERROR</div>';
+            if (discordVideos.length > 0) {
+                buildSectionHeader('— 03 Video Vault —');
+                discordVideos.forEach(vid => {
+                    createCard({ name: vid.name }, 'video', vid.url);
+                });
             }
         }
 
@@ -492,8 +334,7 @@
             setTimeout(() => ripple.remove(), 500);
         }
 
-        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents?t=${new Date().getTime()}`;
-    
+        window.addEventListener('DOMContentLoaded', loadStaticLayout);
 </script>
     <div class="legal-footer">
         2026 Copyright &copy; D4RKS0UL_8. All Rights Reserved.
