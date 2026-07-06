@@ -161,6 +161,288 @@
         #discord-btn:hover { box-shadow: 0 0 25px rgba(88, 101, 242, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
         #discord-btn .ripple { background: rgba(255, 255, 255, 0.6); }
 
+        /* --- MESSAGES FEATURE STYLES --- */
+        #messages-btn {
+                position: fixed;
+                bottom: 75px;
+                right: 20px;
+                background: linear-gradient(135deg, #ff416c, #ff4b2b);
+                color: white;
+                padding: 10px 15px;
+                border-radius: 50px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
+                font-weight: 700 !important; 
+                letter-spacing: -0.2px;
+                font-size: 14px;
+                box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+                border: 2px solid transparent;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                overflow: hidden;
+        }
+        #messages-btn:hover { box-shadow: 0 0 25px rgba(255, 65, 108, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
+
+        #chat-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(11, 12, 16, 0.95);
+                backdrop-filter: blur(25px) saturate(150%);
+                z-index: 2000;
+                display: none;
+                justify-content: center;
+                align-items: center;
+        }
+
+        .phone-frame {
+                width: 100%;
+                height: 100%;
+                max-width: 450px;
+                aspect-ratio: 9/16;
+                background: rgba(20, 20, 25, 0.85);
+                border-radius: 0px;
+                border: none;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+        }
+
+        @media(min-width: 480px) {
+                .phone-frame {
+                        height: 90vh;
+                        border-radius: 40px;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                }
+        }
+
+        .chat-header {
+                padding: 20px;
+                background: rgba(10, 10, 12, 0.9);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+        }
+
+        .back-btn {
+                background: rgba(255,255,255,0.1);
+                border: none;
+                color: white;
+                padding: 8px 14px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 12px;
+                transition: background 0.2s;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .chat-title {
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 16px;
+                font-weight: bold;
+                letter-spacing: 1px;
+        }
+
+        .chat-body {
+                flex: 1;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+        }
+
+        .auth-container {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                justify-content: center;
+                height: 100%;
+                padding: 0 20px;
+        }
+
+        .auth-container h2 {
+                text-align: center;
+                font-size: 18px;
+                margin-bottom: 10px;
+                letter-spacing: 2px;
+        }
+
+        .auth-input {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                padding: 12px 15px;
+                border-radius: 12px;
+                color: white;
+                font-family: 'SFProDisplay', sans-serif;
+                outline: none;
+                font-size: 14px;
+                transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .auth-input:focus { border-color: #ff416c; }
+
+        .auth-btn {
+                background: linear-gradient(135deg, #ff416c, #ff4b2b);
+                color: white;
+                border: none;
+                padding: 14px;
+                border-radius: 12px;
+                cursor: pointer;
+                font-family: 'SFProDisplay', sans-serif;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 10px;
+        }
+
+        .auth-toggle-text {
+                text-align: center;
+                font-size: 12px;
+                color: #aaa;
+                margin-top: 10px;
+                cursor: pointer;
+                text-decoration: underline;
+                font-family: 'SFProDisplay', sans-serif;
+        }
+
+        .friends-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+        }
+
+        .add-friend-bar {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 5px;
+        }
+
+        /* --- DYNAMIC INDICATOR STYLES --- */
+        .friend-status-feedback {
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 12px;
+                margin-bottom: 15px;
+                padding-left: 2px;
+                display: none;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+        }
+        .feedback-success { color: #2ed573; }
+        .feedback-error { color: #ff4757; }
+
+        .input-success { border-color: #2ed573 !important; box-shadow: 0 0 10px rgba(46, 213, 115, 0.2); }
+        .input-error { border-color: #ff4757 !important; box-shadow: 0 0 10px rgba(255, 71, 87, 0.2); }
+
+        .friend-requests-btn {
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                color: white;
+                padding: 12px;
+                border-radius: 12px;
+                cursor: pointer;
+                font-family: 'SFProDisplay', sans-serif;
+                font-weight: bold;
+                letter-spacing: 1px;
+                margin-bottom: 15px;
+                text-align: center;
+                transition: background 0.2s, border-color 0.2s;
+        }
+        .friend-requests-btn:hover {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
+        }
+        .friend-requests-btn span { text-decoration: underline; }
+
+        .requests-list-panel {
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 14px;
+                padding: 15px;
+                margin-bottom: 15px;
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 13px;
+                border: 1px dashed rgba(255,255,255,0.1);
+        }
+        .request-string-display { color: #e5e5e7; line-height: 1.5; margin-bottom: 12px; }
+        .request-action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .action-accept-btn {
+                background: #2ed573;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 6px;
+                font-size: 11px;
+                cursor: pointer;
+                font-weight: bold;
+        }
+
+        .active-chats-header { font-size: 12px; color: #ff416c; margin: 10px 0 5px 0; letter-spacing: 1px; }
+        
+        .friend-item {
+                background: rgba(255,255,255,0.03);
+                padding: 10px 15px;
+                border-radius: 10px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 14px;
+                border: 1px solid rgba(255,255,255,0.02);
+        }
+        .friend-item:hover { background: rgba(255,255,255,0.08); }
+
+        .chat-view-container { display: flex; flex-direction: column; height: 100%; }
+        .messages-log-area { flex: 1; overflow-y: auto; padding: 10px 0; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg-bubble {
+                background: rgba(255,255,255,0.06);
+                padding: 10px;
+                border-radius: 10px;
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 13px;
+                max-width: 85%;
+        }
+        .msg-bubble .msg-meta { font-size: 10px; color: #ff4b2b; margin-bottom: 4px; font-weight: bold; }
+        .msg-bubble .msg-time { font-size: 9px; color: #777; float: right; margin-top: 4px; }
+        
+        .chat-input-bar { display: flex; gap: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        .empty-friends {
+                text-align: center;
+                color: #555;
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 13px;
+                padding: 15px 0;
+        }
+
+        .user-status {
+                font-size: 11px;
+                color: #aaa;
+                font-family: 'SFProDisplay', sans-serif;
+                text-transform: none;
+                background: rgba(255,255,255,0.05);
+                padding: 6px 12px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+        }
+
+        .logout-link {
+                color: #ff416c;
+                cursor: pointer;
+                font-weight: bold;
+        }
+
         .section-header {
                 width: 100%;
                 max-width: 500px;
@@ -181,16 +463,34 @@
     <h1 class="angelone-header">AERO 15XV8 SHAREPOINT</h1>    
     <div id="file-list"></div>
 
+    <div id="messages-btn" onclick="toggleChat(true)">
+        MESSAGES
+    </div>
+
     <a href="https://discord.gg/C8uJddDdAC" target="_blank" id="discord-btn">
         <img src="discordicon.png" alt="Discord">
         JOIN DISCORD
     </a>
 
+    <div id="chat-overlay">
+        <div class="phone-frame">
+            <div class="chat-header">
+                <button class="back-btn" id="header-back-action" onclick="toggleChat(false)">← BACK</button>
+                <div class="chat-title" id="header-title-text">MESSAGES</div>
+                <div style="width: 60px;"></div>
+            </div>
+            <div class="chat-body" id="chat-system-content">
+            </div>
+        </div>
+    </div>
+
 <script>
         const GITHUB_USERNAME = 'D4RKS0UL8';
         const REPO_NAME = 'the-songs-and-videos';
         
-        // --- MANUALLY FIXED DATA MATRICES TO PREVENT API LOCKOUTS ---
+        // --- PROXY API CONFIGURATION ---
+        const PROXY_API_URL = 'https://doodle.sadkid-loneone.workers.dev/';
+
         const normalSongs = [
             { name: "Achilles Come Down.mp3", suggester: "M <3" },
             { name: "As It Was.mp3" },
@@ -332,6 +632,362 @@
             ripple.style.left = e.clientX - rect.left - size/2 + 'px';
             ripple.style.top = e.clientY - rect.top - size/2 + 'px';
             setTimeout(() => ripple.remove(), 500);
+        }
+
+        // --- REAL DATA STATE ENGINE ---
+        let currentUser = localStorage.getItem('chat_user') || null;
+        let authMode = 'login'; 
+        let showRequestsPanel = false;
+        let activeChatTarget = null;
+
+        let lastFeedbackMsg = "";
+        let lastFeedbackType = ""; 
+
+        const numberWords = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+        let userState = {
+            incomingRequests: [],
+            friendsList: [],
+            chatLogs: {} 
+        };
+
+        function toggleChat(show) {
+            const overlay = document.getElementById('chat-overlay');
+            overlay.style.display = show ? 'flex' : 'none';
+            if (show) {
+                showRequestsPanel = false;
+                activeChatTarget = null;
+                lastFeedbackMsg = "";
+                lastFeedbackType = "";
+                if (currentUser) syncUserData();
+                renderChatSystem();
+            }
+        }
+
+        function toggleAuthMode() {
+            authMode = (authMode === 'login') ? 'signup' : 'login';
+            renderChatSystem();
+        }
+
+        function toggleRequestsPanel() {
+            showRequestsPanel = !showRequestsPanel;
+            renderChatSystem();
+        }
+
+        function generateRequestString() {
+            const reqs = userState.incomingRequests;
+            if (reqs.length === 0) return `${currentUser} has zero pending friend requests.`;
+            const countWord = numberWords[reqs.length] || reqs.length;
+            const targetPhrase = reqs.length === 1 ? "friend request" : "friend requests";
+            if (reqs.length === 1) return `${currentUser} has ${countWord} ${targetPhrase} from ${reqs[0]}`;
+            const allButLast = reqs.slice(0, -1).join(', ');
+            const last = reqs[reqs.length - 1];
+            return `${currentUser} has ${countWord} ${targetPhrase} from ${allButLast} and ${last}`;
+        }
+
+        async function syncUserData() {
+            try {
+                const response = await fetch(PROXY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'sync_data', username: currentUser })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if(data.userState) {
+                        userState = data.userState;
+                        renderChatSystem();
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function addFriend() {
+            const targetFriendInput = document.getElementById('friend-username');
+            const targetFriend = targetFriendInput.value.trim();
+            if (!targetFriend) return;
+
+            try {
+                const response = await fetch(PROXY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'send_request', from: currentUser, to: targetFriend })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    lastFeedbackMsg = `friend request was sent to ${targetFriend} successfully`;
+                    lastFeedbackType = "success";
+                    targetFriendInput.value = '';
+                    await syncUserData();
+                } else {
+                    if (data.code === 'USER_NOT_FOUND' || response.status === 404) {
+                        lastFeedbackMsg = `${targetFriend} is not an existing account, check spelling and try again`;
+                    } else {
+                        lastFeedbackMsg = data.message || `Could not send request to ${targetFriend}`;
+                    }
+                    lastFeedbackType = "error";
+                    renderChatSystem();
+                }
+            } catch (err) {
+                lastFeedbackMsg = "Connection issue occurred while looking up account.";
+                lastFeedbackType = "error";
+                renderChatSystem();
+            }
+        }
+
+        async function acceptRequest(sender) {
+            try {
+                const response = await fetch(PROXY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'accept_request', username: currentUser, target: sender })
+                });
+                if (response.ok) await syncUserData();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function openChatWithFriend(friendName) {
+            activeChatTarget = friendName;
+            renderChatSystem();
+        }
+
+        function closeActiveChat() {
+            activeChatTarget = null;
+            renderChatSystem();
+        }
+
+        async function triggerSendMessage() {
+            const inputField = document.getElementById('chat-message-input');
+            const messageText = inputField.value.trim();
+            if (!messageText || !activeChatTarget) return;
+
+            const now = new Date();
+            const timestampString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            const logPayload = {
+                name: currentUser,
+                input: messageText,
+                datetime: timestampString
+            };
+
+            try {
+                const response = await fetch(PROXY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'send_message', username: currentUser, target: activeChatTarget, message: logPayload })
+                });
+                if (response.ok) {
+                    inputField.value = '';
+                    await syncUserData();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderChatSystem() {
+            const container = document.getElementById('chat-system-content');
+            const backBtn = document.getElementById('header-back-action');
+            const titleText = document.getElementById('header-title-text');
+            
+            if (currentUser && activeChatTarget) {
+                backBtn.setAttribute('onclick', 'closeActiveChat()');
+                titleText.innerText = activeChatTarget.toUpperCase();
+                
+                let messagesHTML = '';
+                const logs = userState.chatLogs[activeChatTarget] || [];
+                logs.forEach(msg => {
+                    messagesHTML += `
+                        <div class="msg-bubble">
+                            <div class="msg-meta">${msg.name}</div>
+                            <div>${msg.input}</div>
+                            <div class="msg-time">${msg.datetime}</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <div class="chat-view-container">
+                        <div class="messages-log-area">
+                            ${messagesHTML || '<div class="empty-friends" style="margin-top:auto;margin-bottom:auto;">No messages yet. Say hello!</div>'}
+                        </div>
+                        <div class="chat-input-bar">
+                            <input type="text" id="chat-message-input" class="auth-input" style="flex:1;" placeholder="Type a message...">
+                            <button class="auth-btn" style="margin-top:0; padding:0 20px;" onclick="triggerSendMessage()">Send</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            backBtn.setAttribute('onclick', 'toggleChat(false)');
+            titleText.innerText = "MESSAGES";
+
+            if (!currentUser) {
+                if (authMode === 'login') {
+                    container.innerHTML = `
+                        <div class="auth-container">
+                            <h2>ACCOUNT LOGIN</h2>
+                            <input type="text" id="auth-username" class="auth-input" placeholder="Username">
+                            <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+                            <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth('login')">Login</button>
+                            <div class="auth-toggle-text" onclick="toggleAuthMode()">Don't have an account? Sign Up</div>
+                            <div style="text-align: center; font-size: 11px; color: #666; margin-top: 15px; font-family: 'SFProDisplay', sans-serif; letter-spacing: 0.5px; line-height: 1.6; text-transform: none;">
+    note: make sure you note your login down before signing up<br>
+    capital letters and small letters count so be careful<br>
+    if you somehow forgot your password or username dm me on discord:<br>
+    <span style="color: #ff416c; font-weight: bold;">d4rks0ul_8</span>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="auth-container">
+                            <h2>CREATE ACCOUNT</h2>
+                            <input type="text" id="auth-username" class="auth-input" placeholder="Choose Username">
+                            <input type="password" id="auth-password" class="auth-input" placeholder="Choose Password">
+                            <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth('signup')">Sign Up</button>
+                            <div class="auth-toggle-text" onclick="toggleAuthMode()">Already have an account? Login</div>
+                            <div style="text-align: center; font-size: 11px; color: #666; margin-top: 15px; font-family: 'SFProDisplay', sans-serif; letter-spacing: 0.5px; line-height: 1.6; text-transform: none;">
+    note: make sure you note your login down before signing up<br>
+    capital letters and small letters count so be careful<br>
+    if you somehow forgot your password or username dm me on discord:<br>
+    <span style="color: #ff416c; font-weight: bold;">d4rks0ul_8</span>
+
+                        </div>
+                    `;
+                }
+            } else {
+                let requestsPanelHTML = '';
+                if (showRequestsPanel) {
+                    let actionsHTML = '';
+                    userState.incomingRequests.forEach(sender => {
+                        actionsHTML += `<button class="action-accept-btn" onclick="acceptRequest('${sender}')">Accept ${sender}</button>`;
+                    });
+                    requestsPanelHTML = `
+                        <div class="requests-list-panel">
+                            <div class="request-string-display"><b>Live Requests Summary:</b><br>"${generateRequestString()}"</div>
+                            <div class="request-action-row">${actionsHTML || '<span style="color:#666;">No actions pending</span>'}</div>
+                        </div>
+                    `;
+                }
+
+                let friendsListHTML = '';
+                userState.friendsList.forEach(friend => {
+                    friendsListHTML += `
+                        <div class="friend-item" onclick="openChatWithFriend('${friend}')">
+                            <span>⚡ ${friend}</span>
+                            <span style="color:#ff4b2b; font-size:11px;">OPEN CHAT →</span>
+                        </div>
+                    `;
+                });
+
+                let inputModifierClass = "";
+                let feedbackModifierClass = "";
+                let displayStyle = "none";
+
+                if (lastFeedbackMsg) {
+                    displayStyle = "block";
+                    if (lastFeedbackType === "success") {
+                        inputModifierClass = "input-success";
+                        feedbackModifierClass = "feedback-success";
+                    } else {
+                        inputModifierClass = "input-error";
+                        feedbackModifierClass = "feedback-error";
+                    }
+                }
+
+                container.innerHTML = `
+                    <div class="friends-container">
+                        <div class="user-status">
+                            <span>Logged in as: <b>${currentUser}</b></span>
+                            <span class="logout-link" onclick="handleLogout()">Logout</span>
+                        </div>
+                        
+                        <div class="friend-requests-btn" onclick="toggleRequestsPanel()">
+                            [<span>${userState.incomingRequests.length}</span>] Friend Requests
+                        </div>
+
+                        ${requestsPanelHTML}
+
+                        <div class="add-friend-bar">
+                            <input type="text" id="friend-username" class="auth-input ${inputModifierClass}" style="flex: 1;" placeholder="Friend's Username" oninput="clearFeedbackStyle()">
+                            <button class="auth-btn" style="margin-top:0; padding: 0 15px;" onclick="addFriend()">Add</button>
+                        </div>
+                        <div id="friend-feedback-msg" class="friend-status-feedback ${feedbackModifierClass}" style="display: ${displayStyle};">
+                            ${lastFeedbackMsg}
+                        </div>
+                        
+                        <div class="active-chats-header">ACTIVE CHAT LOGS</div>
+                        <div style="flex:1; overflow-y:auto;">
+                            ${friendsListHTML || '<div class="empty-friends">No active chat channels built yet. Accept requests above to connect.</div>'}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function clearFeedbackStyle() {
+            const input = document.getElementById('friend-username');
+            const label = document.getElementById('friend-feedback-msg');
+            if(input) input.classList.remove('input-success', 'input-error');
+            if(label) label.style.display = 'none';
+            lastFeedbackMsg = "";
+            lastFeedbackType = "";
+        }
+
+        async function handleAuth(action) {
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value.trim();
+            const btn = document.getElementById('auth-submit-btn');
+
+            if (!user || !pass) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            try {
+                const response = await fetch(PROXY_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, username: user, password: pass })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    localStorage.setItem('chat_user', user);
+                    currentUser = user;
+                    lastFeedbackMsg = "";
+                    lastFeedbackType = "";
+                    syncUserData();
+                } else {
+                    alert(data.message || 'An error occurred.');
+                }
+            } catch (err) {
+                alert('Could not connect to the authentication server.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = action === 'login' ? 'Login' : 'Sign Up';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('chat_user');
+            currentUser = null;
+            authMode = 'login';
+            lastFeedbackMsg = "";
+            lastFeedbackType = "";
+            userState = { incomingRequests: [], friendsList: [], chatLogs: {} };
+            renderChatSystem();
         }
 
         window.addEventListener('DOMContentLoaded', loadStaticLayout);
