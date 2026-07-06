@@ -492,7 +492,8 @@
             setTimeout(() => ripple.remove(), 500);
         }
 
-        window.addEventListener('DOMContentLoaded', loadRepositoryManifest);
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents?t=${new Date().getTime()}`;
+    
 </script>
     <div class="legal-footer">
         2026 Copyright &copy; D4RKS0UL_8. All Rights Reserved.
