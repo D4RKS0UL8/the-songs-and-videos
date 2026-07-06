@@ -24,7 +24,9 @@
   },
   "darky": {
     "password": "darky1",
-    "incomingRequests": [],
+    "incomingRequests": [
+      "pookiebear67"
+    ],
     "friendsList": [
       "d4rks0ul"
     ],
