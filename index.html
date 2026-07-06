@@ -457,6 +457,34 @@
         }
 
         video { width: 100%; border-radius: 8px; margin-top: 10px; background: #000; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+
+        .password-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 100%;
+        }
+
+        .password-wrapper .auth-input {
+                width: 100%;
+                padding-right: 45px;
+        }
+
+        .password-toggle-btn {
+                position: absolute;
+                right: 15px;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                opacity: 0.6;
+                transition: opacity 0.2s;
+                user-select: none;
+                z-index: 10;
+        }
+
+        .password-toggle-btn:hover {
+                opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -490,45 +518,7 @@
         
         // --- PROXY API CONFIGURATION ---
         const PROXY_API_URL = 'https://doodle.sadkid-loneone.workers.dev/';
-
-        const normalSongs = [
-            { name: "Achilles Come Down.mp3", suggester: "M <3" },
-            { name: "As It Was.mp3" },
-            { name: "Blissful - Txmy.m4a" },
-            { name: "Calvin Harris, Jazzy - Sat.mp3" },
-            { name: "DIE OF DEATH OST_ REV.mp3" },
-            { name: "Dancin.mp3" },
-            { name: "Falling Down - Lil Peep X.mp3" },
-            { name: "Last Kiss - Pearl Jam.mp3", suggester: "Anastasia" },
-            { name: "Moonlight on the River.mp3", suggester: "Fluxcxhum" },
-            { name: "Мы верим.mp3", suggester: "S" },
-            { name: "Nightcall Drive.mp3" },
-            { name: "Nightcore - After Dark.mp3" },
-            { name: "NOTION.mp3" },
-            { name: "Ocean Side - $uicideBoy$.mp3", suggester: "J" },
-            { name: "Someone Like You - D4RKS0UL_8.m4a" },
-            { name: "Superstar.mp3", suggester: "SLIMZ" },
-            { name: "Sweater Weather.mp3" },
-            { name: "Tek It - Cafun.mp3", suggester: "M <3" },
-            { name: "The Perfect Girl.mp3" }
-        ];
-
-        const heavySongs = [
-            { name: "CHRISTMAS FUNK (Slo.mp3" },
-            { name: "did i tell u that i miss u.mp3" },
-            { name: "FINAL_ROUND_SUPER_S.mp3" },
-            { name: "FUNK TROPICAL (SLOW.mp3" },
-            { name: "Give A Ni$$a A Break.mp3", suggester: "fatsamslim" },
-            { name: "MONTAGEM FEARLESS SUPER SLOWED.mp3", suggester: "DaddyFerox" },
-            { name: "mutilator (slowed).mp3" },
-            { name: "NOOT NOOT FUNK (Sup.mp3" },
-            { name: "Riot - Three Days Grace.mp3", suggester: "Jadis" },
-            { name: "TOCA PESADO.mp3" },
-            { name: "TOMA NA MENTE.mp3" },
-            { name: "TRETAMENTO.mp3" },
-            { name: "Z-SENTAR.mp3" },
-            { name: "ZAYLO_-_MONTAGEM_U.mp3" }
-        ];
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/`;
 
         const discordVideos = [
             { name: "Holy_Edit1.mp4", url: "https://cdn.discordapp.com/attachments/1475185529459970171/1513651109690871888/Download_1.mp4?ex=6a2880f2&is=6a272f72&hm=fb708393135a7a6cf519226fe7b15716627b2db1db17f7c45866339fd45f6b36&" },
@@ -547,14 +537,15 @@
             container.appendChild(header);
         }
 
-        function createCard(file, type, customUrl = null) {
+        function createCard(file, type, customUrl = null, suggestedBy = null) {
             const card = document.createElement('div');
             card.className = 'file-card';
             
-            if (file.suggester) {
+            const suggester = suggestedBy || file.suggester;
+            if (suggester) {
                 const tag = document.createElement('div');
                 tag.className = 'suggestion-tag';
-                tag.innerText = "Suggested by: " + file.suggester;
+                tag.innerText = "Suggested by: " + suggester;
                 card.appendChild(tag);
             }
 
@@ -601,25 +592,72 @@
             container.appendChild(card);
         }
 
-        function loadStaticLayout() {
-            container.innerHTML = ''; 
+        async function loadRepositoryManifest() {
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error('Repository data unavailable');
+                    
+                    const files = await response.json();
+                    container.innerHTML = ''; 
 
-            if (normalSongs.length > 0) {
-                buildSectionHeader('— 01 Music Stream —');
-                normalSongs.forEach(file => createCard(file, 'audio'));
-            }
+                    // Filter 1: Audio files that DO NOT contain Funk or Montagem keywords (.mp3 and .m4a only)
+                    const songs = files.filter(f => 
+                        (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
+                        !f.name.toLowerCase().includes('funk') && 
+                        !f.name.toLowerCase().includes('montagem') &&
+                        !f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') &&
+                        !f.name.includes('HOLLOW') &&
+                        !f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') &&
+                        !f.name.includes('Z-SENTAR') && !f.name.includes('TOCA PESADO') && 
+                        !f.name.includes('JOGO MORTO') && !f.name.includes('TOMA NA MENTE') &&
+                        !f.name.includes('TRETAMENTO')
+                    );
 
-            if (heavySongs.length > 0) {
-                buildSectionHeader('— 02 Music Stream —');
-                heavySongs.forEach(file => createCard(file, 'audio'));
-            }
+                    // Filter 2: Explicitly group Funk, Montagem, and short titles together (.mp3 and .m4a only)
+                    const songies = files.filter(f => 
+                        (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
+                        (f.name.toLowerCase().includes('funk') || 
+                         f.name.toLowerCase().includes('montagem') ||
+                         f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
+                         f.name.includes('HOLLOW') ||
+                         f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
+                         f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
+                         f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
+                         f.name.includes('TRETAMENTO'))
+                    );
 
-            if (discordVideos.length > 0) {
-                buildSectionHeader('— 03 Video Vault —');
-                discordVideos.forEach(vid => {
-                    createCard({ name: vid.name }, 'video', vid.url);
-                });
-            }
+                    // Filter 3: Video vault matching format from GitHub repository
+                    const gitHubVideos = files.filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov'));
+
+                    // Render Section 1
+                    if (songs.length > 0) {
+                        buildSectionHeader('— 01 Music Stream —');
+                        songs.forEach(file => createCard(file, 'audio'));
+                    }
+
+                    // Render Section 2
+                    if (songies.length > 0) {
+                        buildSectionHeader('— 02 Music Stream —');
+                        songies.forEach(file => createCard(file, 'audio'));
+                    }
+
+                    // Render Section 3: Combines GitHub Uploads and Discord Attachments seamlessly
+                    if (gitHubVideos.length > 0 || discordVideos.length > 0) {
+                        buildSectionHeader('— 03 Video Vault —');
+                        
+                        // First, load structural files from GitHub
+                        gitHubVideos.forEach(file => createCard(file, 'video'));
+                        
+                        // Second, load custom links from Discord
+                        discordVideos.forEach(vid => {
+                            createCard({ name: vid.name }, 'video', vid.url, vid.suggestedBy);
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Error sorting tracks:', error);
+                    container.innerHTML = '<div class="section-header" style="color:#ff453a; border-color:#ff453a;">CONNECTION ERROR</div>';
+                }
         }
 
         function createRipple(e, el) {
@@ -672,6 +710,19 @@
         function toggleRequestsPanel() {
             showRequestsPanel = !showRequestsPanel;
             renderChatSystem();
+        }
+
+        function togglePasswordVisibility() {
+                const passwordInput = document.getElementById('auth-password');
+                const toggleIcon = document.getElementById('password-toggle');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.src = 'eye-open.png';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.src = 'eye-closed.png';
+                }
         }
 
         function generateRequestString() {
@@ -834,7 +885,10 @@
                         <div class="auth-container">
                             <h2>ACCOUNT LOGIN</h2>
                             <input type="text" id="auth-username" class="auth-input" placeholder="Username">
-                            <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+                            <div class="password-wrapper">
+                                <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+                                <img src="eye-closed.png" class="password-toggle-btn" id="password-toggle" onclick="togglePasswordVisibility()">
+                            </div>
                             <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth('login')">Login</button>
                             <div class="auth-toggle-text" onclick="toggleAuthMode()">Don't have an account? Sign Up</div>
                             <div style="text-align: center; font-size: 11px; color: #666; margin-top: 15px; font-family: 'SFProDisplay', sans-serif; letter-spacing: 0.5px; line-height: 1.6; text-transform: none;">
@@ -849,7 +903,10 @@
                         <div class="auth-container">
                             <h2>CREATE ACCOUNT</h2>
                             <input type="text" id="auth-username" class="auth-input" placeholder="Choose Username">
-                            <input type="password" id="auth-password" class="auth-input" placeholder="Choose Password">
+                            <div class="password-wrapper">
+                                <input type="password" id="auth-password" class="auth-input" placeholder="Choose Password">
+                                <img src="eye-closed.png" class="password-toggle-btn" id="password-toggle" onclick="togglePasswordVisibility()">
+                            </div>
                             <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth('signup')">Sign Up</button>
                             <div class="auth-toggle-text" onclick="toggleAuthMode()">Already have an account? Login</div>
                             <div style="text-align: center; font-size: 11px; color: #666; margin-top: 15px; font-family: 'SFProDisplay', sans-serif; letter-spacing: 0.5px; line-height: 1.6; text-transform: none;">
@@ -990,7 +1047,7 @@
             renderChatSystem();
         }
 
-        window.addEventListener('DOMContentLoaded', loadStaticLayout);
+        window.addEventListener('DOMContentLoaded', loadRepositoryManifest);
 </script>
     <div class="legal-footer">
         2026 Copyright &copy; D4RKS0UL_8. All Rights Reserved.
