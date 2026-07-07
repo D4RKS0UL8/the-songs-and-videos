@@ -18,6 +18,13 @@
           "input": "WASSUP",
           "datetime": "06/07/2026 20:59"
         }
+      ],
+      "pookiebear67": [
+        {
+          "name": "pookiebear67",
+          "input": "hiiiii",
+          "datetime": "07/07/2026 05:45"
+        }
       ]
     }
   },
@@ -50,6 +57,14 @@
     "friendsList": [
       "d4rks0ul"
     ],
-    "chatLogs": {}
+    "chatLogs": {
+      "d4rks0ul": [
+        {
+          "name": "pookiebear67",
+          "input": "hiiiii",
+          "datetime": "07/07/2026 05:45"
+        }
+      ]
+    }
   }
 }
