@@ -534,7 +534,7 @@
             container.appendChild(header);
         }
 
-function createCard(file, type, customUrl = null, suggestedBy = null) {
+        function createCard(file, type, customUrl = null, suggestedBy = null) {
             const card = document.createElement('div');
             card.className = 'file-card';
             
@@ -599,9 +599,8 @@ function createCard(file, type, customUrl = null, suggestedBy = null) {
                     trackCoordinates(e);
                 });
             }
-
-            container.appendChild(card);
         }
+
 
         async function loadRepositoryManifest() {
                 try {
