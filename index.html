@@ -561,17 +561,24 @@
             const streamUrl = customUrl || `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${encodeURIComponent(file.name)}`;
 
             let player;
-            if (streamUrl.includes('youtube')) {
-                player = document.createElement('iframe');
-                player.src = streamUrl;
+            if (streamUrl.includes('youtube.com/embed/')) {
+                player = document.createElement('div');
                 player.style.width = "100%";
-                player.style.aspectRatio = "9/16"; 
-                player.style.height = "auto"; 
-                player.style.minHeight = "450px"; 
-                player.style.border = "none";
+                player.style.aspectRatio = "9/16";
+                player.style.minHeight = "450px";
+                player.style.display = "flex";
+                player.style.alignItems = "center";
+                player.style.justifyContent = "center";
+                player.style.background = "rgba(0,0,0,0.4)";
                 player.style.borderRadius = "8px";
-                player.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-                player.setAttribute('allowfullscreen', 'true');
+                player.style.border = "1px dashed rgba(255,255,255,0.1)";
+                
+                const playBtn = document.createElement('button');
+                playBtn.className = 'auth-btn';
+                playBtn.style.marginTop = "0";
+                playBtn.innerText = "▶ WATCH ON YOUTUBE";
+                playBtn.onclick = () => window.open(streamUrl.replace('embed/', 'shorts/'), '_blank');
+                player.appendChild(playBtn);
             } else {
                 player = document.createElement(type);
                 player.controls = true;
