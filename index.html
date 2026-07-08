@@ -534,7 +534,7 @@
             container.appendChild(header);
         }
 
-        function createCard(file, type, customUrl = null, suggestedBy = null) {
+function createCard(file, type, customUrl = null, suggestedBy = null) {
             const card = document.createElement('div');
             card.className = 'file-card';
             
@@ -553,22 +553,34 @@
 
             const streamUrl = customUrl || `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${encodeURIComponent(file.name)}`;
 
-            const player = document.createElement(type);
-            player.controls = true;
-            player.src = streamUrl;
-            player.preload = "metadata";
+            let player;
+            if (streamUrl.includes('youtube.com/embed/')) {
+                player = document.createElement('iframe');
+                player.src = streamUrl;
+                player.style.width = "100%";
+                player.style.height = "250px";
+                player.style.border = "none";
+                player.style.borderRadius = "8px";
+                player.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                player.setAttribute('allowfullscreen', 'true');
+            } else {
+                player = document.createElement(type);
+                player.controls = true;
+                player.src = streamUrl;
+                player.preload = "metadata";
+
+                player.addEventListener('play', function() {
+                    if (currentlyPlayingMedia && currentlyPlayingMedia !== player) {
+                        currentlyPlayingMedia.pause();
+                    }
+                    currentlyPlayingMedia = player;
+                });
+            }
             card.appendChild(player);
 
-            player.addEventListener('play', function() {
-                if (currentlyPlayingMedia && currentlyPlayingMedia !== player) {
-                    currentlyPlayingMedia.pause();
-                }
-                currentlyPlayingMedia = player;
-            });
-
             card.addEventListener('mousedown', function(e) {
-                if (['AUDIO', 'VIDEO'].includes(e.target.tagName)) return;
-                player.load(); 
+                if (['AUDIO', 'VIDEO', 'IFRAME'].includes(e.target.tagName)) return;
+                if (typeof player.load === 'function') player.load(); 
                 createRipple(e, this);
             });
 
@@ -581,10 +593,12 @@
             };
 
             card.addEventListener('mousemove', trackCoordinates);
-            player.addEventListener('mousemove', (e) => {
-                e.stopPropagation(); 
-                trackCoordinates(e);
-            });
+            if (player.tagName !== 'IFRAME') {
+                player.addEventListener('mousemove', (e) => {
+                    e.stopPropagation(); 
+                    trackCoordinates(e);
+                });
+            }
 
             container.appendChild(card);
         }
