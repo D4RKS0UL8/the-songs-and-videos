@@ -46,7 +46,7 @@
                 50% { background-position: 100% 85%; }
                 100% { background-position: 30% 0%; }
         }
-        #file-list { width: 100%; max-width: 500px; }
+        #mediaContainer, #videoContainer { width: 100%; max-width: 500px; }
 
         .file-card {
                 background: linear-gradient(135deg, rgba(20, 20, 25, 0.7) 0%, rgba(10, 10, 12, 0.85) 100%);
@@ -133,7 +133,7 @@
         audio:hover { opacity: 1; box-shadow: 0 0 30px rgba(255, 255, 255, 0.18); }
         audio:hover::-webkit-media-controls-enclosure { background-color: rgba(255, 255, 255, 0.18) !important; box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(0, 0, 0, 0.2); }
 
-        .ripple { position: absolute; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transform: scale(0); animation: ripple-animation 0.5s ease-out; pointer-events: none; }
+        .ripple-effect { position: absolute; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transform: scale(0); animation: ripple-animation 0.5s ease-out; pointer-events: none; }
         @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
         #discord-btn {
@@ -159,7 +159,7 @@
         }
         #discord-btn img { width: 20px; height: 20px; margin-right: 10px; }
         #discord-btn:hover { box-shadow: 0 0 25px rgba(88, 101, 242, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
-        #discord-btn .ripple { background: rgba(255, 255, 255, 0.6); }
+        #discord-btn .ripple-effect { background: rgba(255, 255, 255, 0.6); }
 
         /* --- MESSAGES FEATURE STYLES --- */
         #messages-btn {
@@ -333,7 +333,7 @@
                 display: none;
                 font-weight: bold;
                 letter-spacing: 0.5px;
-        }
+                }
         .feedback-success { color: #2ed573; }
         .feedback-error { color: #ff4757; }
 
@@ -456,7 +456,7 @@
                 text-transform: uppercase;
         }
 
-        video { width: 100%; border-radius: 8px; margin-top: 10px; background: #000; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        video, iframe { width: 100%; border-radius: 8px; margin-top: 10px; background: #000; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
 
         .password-wrapper {
                 position: relative;
@@ -489,7 +489,8 @@
 </head>
 <body>
     <h1 class="angelone-header">AERO 15XV8 SHAREPOINT</h1>    
-    <div id="file-list"></div>
+    <div id="mediaContainer"></div>
+    <div id="videoContainer"></div>
 
     <div id="messages-btn" onclick="toggleChat(true)">
         MESSAGES
@@ -521,20 +522,26 @@
         const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/`;
 
         const discordVideos = [
-            { name: "Newedit1.mp4", url: "https://www.youtube.com/embed/iDlPvfGpMro"" }
+            { name: "edit1.mp4", url: "https://www.youtube-nocookie.com/embed/1PUy0vda9CA" }
         ];
 
         let currentlyPlayingMedia = null;
-        const container = document.getElementById('file-list');
 
-        function buildSectionHeader(title) {
-            const header = document.createElement('div');
-            header.className = 'section-header';
-            header.innerText = title;
-            container.appendChild(header);
+        function createRipple(e, element) {
+            const circle = document.createElement('span');
+            const diameter = Math.max(element.clientWidth, element.clientHeight);
+            const radius = diameter / 2;
+            circle.style.width = circle.style.height = `${diameter}px`;
+            const rect = element.getBoundingClientRect();
+            circle.style.left = `${e.clientX - rect.left - radius}px`;
+            circle.style.top = `${e.clientY - rect.top - radius}px`;
+            circle.className = 'ripple-effect';
+            const oldRipple = element.querySelector('.ripple-effect');
+            if (oldRipple) oldRipple.remove();
+            element.appendChild(circle);
         }
 
-        function createCard(file, type, customUrl = null, suggestedBy = null) {
+        function createCard(file, type, customUrl = null, suggestedBy = null, targetContainer) {
             const card = document.createElement('div');
             card.className = 'file-card';
             
@@ -554,11 +561,13 @@
             const streamUrl = customUrl || `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${encodeURIComponent(file.name)}`;
 
             let player;
-            if (streamUrl.includes('youtube.com/embed/')) {
+            if (streamUrl.includes('youtube')) {
                 player = document.createElement('iframe');
                 player.src = streamUrl;
                 player.style.width = "100%";
-                player.style.height = "250px";
+                player.style.aspectRatio = "9/16"; 
+                player.style.height = "auto"; 
+                player.style.minHeight = "450px"; 
                 player.style.border = "none";
                 player.style.borderRadius = "8px";
                 player.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
@@ -599,88 +608,78 @@
                     trackCoordinates(e);
                 });
             }
-        container.appendChild(card);
-        }
 
+            targetContainer.appendChild(card);
+        }
 
         async function loadRepositoryManifest() {
-                try {
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Repository data unavailable');
-                    
-                    const files = await response.json();
-                    container.innerHTML = ''; 
+            const container = document.getElementById('mediaContainer');
+            const videoContainer = document.getElementById('videoContainer');
+            if (!container || !videoContainer) return;
 
-                    // Filter 1: Audio files that DO NOT contain Funk or Montagem keywords (.mp3 and .m4a only)
-                    const songs = files.filter(f => 
-                        (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
-                        !f.name.toLowerCase().includes('funk') && 
-                        !f.name.toLowerCase().includes('montagem') &&
-                        !f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') &&
-                        !f.name.includes('HOLLOW') &&
-                        !f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') &&
-                        !f.name.includes('Z-SENTAR') && !f.name.includes('TOCA PESADO') && 
-                        !f.name.includes('JOGO MORTO') && !f.name.includes('TOMA NA MENTE') &&
-                        !f.name.includes('TRETAMENTO')
-                    );
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Repository data unavailable');
+                
+                const files = await response.json();
+                container.innerHTML = ''; 
+                videoContainer.innerHTML = '';
 
-                    // Filter 2: Explicitly group Funk, Montagem, and short titles together (.mp3 and .m4a only)
-                    const songies = files.filter(f => 
-                        (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
-                        (f.name.toLowerCase().includes('funk') || 
-                         f.name.toLowerCase().includes('montagem') ||
-                         f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
-                         f.name.includes('HOLLOW') ||
-                         f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
-                         f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
-                         f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
-                         f.name.includes('TRETAMENTO'))
-                    );
+                const songs = files.filter(f => 
+                    (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
+                    !f.name.toLowerCase().includes('funk') && 
+                    !f.name.toLowerCase().includes('montagem') &&
+                    !f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') &&
+                    !f.name.includes('HOLLOW') &&
+                    !f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') &&
+                    !f.name.includes('Z-SENTAR') && !f.name.includes('TOCA PESADO') && 
+                    !f.name.includes('JOGO MORTO') && !f.name.includes('TOMA NA MENTE') &&
+                    !f.name.includes('TRETAMENTO')
+                );
 
-                    // Filter 3: Video vault matching format from GitHub repository
-                    const gitHubVideos = files.filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov'));
+                const songies = files.filter(f => 
+                    (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
+                    (f.name.toLowerCase().includes('funk') || 
+                     f.name.toLowerCase().includes('montagem') ||
+                     f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
+                     f.name.includes('HOLLOW') ||
+                     f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
+                     f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
+                     f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
+                     f.name.includes('TRETAMENTO'))
+                );
 
-                    // Render Section 1
-                    if (songs.length > 0) {
-                        buildSectionHeader('— 01 Music Stream —');
-                        songs.forEach(file => createCard(file, 'audio'));
-                    }
+                const gitHubVideos = files.filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov'));
 
-                    // Render Section 2
-                    if (songies.length > 0) {
-                        buildSectionHeader('— 02 Music Stream —');
-                        songies.forEach(file => createCard(file, 'audio'));
-                    }
-
-                    // Render Section 3: Combines GitHub Uploads and Discord Attachments seamlessly
-                    if (gitHubVideos.length > 0 || discordVideos.length > 0) {
-                        buildSectionHeader('— 03 Video Vault —');
-                        
-                        // First, load structural files from GitHub
-                        gitHubVideos.forEach(file => createCard(file, 'video'));
-                        
-                        // Second, load custom links from Discord
-                        discordVideos.forEach(vid => {
-                            createCard({ name: vid.name }, 'video', vid.url, vid.suggestedBy);
-                        });
-                    }
-
-                } catch (error) {
-                    console.error('Error sorting tracks:', error);
-                    container.innerHTML = '<div class="section-header" style="color:#ff453a; border-color:#ff453a;">CONNECTION ERROR</div>';
+                function buildSectionHeader(title, dest) {
+                    const header = document.createElement('div');
+                    header.className = 'section-header';
+                    header.innerText = title;
+                    dest.appendChild(header);
                 }
-        }
 
-        function createRipple(e, el) {
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            el.appendChild(ripple);
-            const size = Math.max(el.offsetWidth, el.offsetHeight);
-            const rect = el.getBoundingClientRect();
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = e.clientX - rect.left - size/2 + 'px';
-            ripple.style.top = e.clientY - rect.top - size/2 + 'px';
-            setTimeout(() => ripple.remove(), 500);
+                if (songs.length > 0) {
+                    buildSectionHeader('— 01 Music Stream —', container);
+                    songs.forEach(file => createCard(file, 'audio', null, null, container));
+                }
+
+                if (songies.length > 0) {
+                    buildSectionHeader('— 02 Music Stream —', container);
+                    songies.forEach(file => createCard(file, 'audio', null, null, container));
+                }
+
+                if (gitHubVideos.length > 0 || discordVideos.length > 0) {
+                    buildSectionHeader('— 03 Video Vault —', videoContainer);
+                    gitHubVideos.forEach(file => createCard(file, 'video', null, null, videoContainer));
+                    discordVideos.forEach(vid => {
+                        createCard({ name: vid.name }, 'video', vid.url, vid.suggestedBy, videoContainer);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error sorting tracks:', error);
+                container.innerHTML = '<div class="section-header" style="color:#ff453a; border-color:#ff453a;">CONNECTION ERROR</div>';
+            }
         }
 
         // --- REAL DATA STATE ENGINE ---
