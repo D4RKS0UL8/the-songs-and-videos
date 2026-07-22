@@ -9,8 +9,33 @@
     
     <style>
         @font-face {
-                font-family: 'SFProDisplay';
-                src: url('SFProDisplay-Bold.otf');
+            font-family: 'SFProDisplay';
+            src: local('SFProDisplay'),
+                 url('SFProDisplay-Bold.otf') format('opentype'),
+                 url('https://cdn.jsdelivr.net/gh/D4RKS0UL8/the-songs-and-videos@main/SFProDisplay-Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'ANGELONE';
+            src: local('ANGELONE'),
+                 url('ANGELONE.ttf') format('truetype'),
+                 url('https://cdn.jsdelivr.net/gh/D4RKS0UL8/the-songs-and-videos@main/ANGELONE.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'AKIRA';
+            src: local('AKIRA'),
+                 url('AKIRA.otf') format('opentype'),
+                 url('https://cdn.jsdelivr.net/gh/D4RKS0UL8/the-songs-and-videos@main/AKIRA.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
         .angelone-header {
@@ -106,7 +131,6 @@
                 margin-bottom: 5px;
         }
 
-        /* --- LEGACY AUDIO PLAYER STYLES --- */
         audio {
                 width: 100%;
                 height: 40px;
@@ -134,14 +158,13 @@
         audio:hover { opacity: 1; box-shadow: 0 0 30px rgba(255, 255, 255, 0.18); }
         audio:hover::-webkit-media-controls-enclosure { background-color: rgba(255, 255, 255, 0.18) !important; box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(0, 0, 0, 0.2); }
 
-        /* --- FLOATING BOTTOM BAR STYLES --- */
         #now-playing-bar {
                 position: fixed;
                 bottom: 12px;
-                left: 50%;
-                transform: translateX(-50%) translateY(120px);
-                width: 95%;
-                max-width: 480px;
+                left: 15px; 
+                transform: translateY(120px); 
+                width: calc(100% - 160px); 
+                max-width: 320px;
                 background: #0f1115;
                 border-radius: 12px;
                 padding: 10px 14px;
@@ -152,12 +175,12 @@
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 transition: transform 0.3s ease, opacity 0.3s ease;
                 opacity: 0;
-                z-index: 1500;
+                z-index: 2400;
                 pointer-events: none;
         }
 
         #now-playing-bar.active {
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0); 
                 opacity: 1;
                 pointer-events: auto;
         }
@@ -247,7 +270,7 @@
                 box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
                 border: 2px solid transparent;
                 transition: all 0.3s ease;
-                z-index: 1000;
+                z-index: 2500;
                 overflow: hidden;
         }
         #discord-btn img { width: 20px; height: 20px; margin-right: 10px; }
@@ -270,11 +293,18 @@
                 font-size: 14px;
                 box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
                 border: 2px solid transparent;
-                transition: all 0.3s ease;
-                z-index: 1000;
+                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+                z-index: 2500;
                 overflow: hidden;
         }
-        #messages-btn:hover { box-shadow: 0 0 25px rgba(255, 65, 108, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
+        #messages-btn.hide-down {
+                transform: translateY(150px) !important;
+        }
+        #messages-btn:not(.hide-down):hover { 
+                box-shadow: 0 0 25px rgba(255, 65, 108, 0.8); 
+                border-color: rgba(255, 255, 255, 0.2); 
+                transform: translateY(-3px) scale(1.05); 
+        }
 
         #chat-overlay {
                 position: fixed;
@@ -282,12 +312,20 @@
                 left: 0;
                 width: 100vw;
                 height: 100vh;
-                background: rgba(11, 12, 16, 0.95);
-                backdrop-filter: blur(25px) saturate(150%);
-                z-index: 2000;
-                display: none;
+                background: rgba(11, 12, 16, 0.45);
+                backdrop-filter: blur(12px) saturate(120%);
+                z-index: 1200;
+                display: flex;
                 justify-content: center;
                 align-items: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #chat-overlay.active {
+                opacity: 1;
+                visibility: visible;
         }
 
         .phone-frame {
@@ -295,7 +333,8 @@
                 height: 100%;
                 max-width: 450px;
                 aspect-ratio: 9/16;
-                background: rgba(20, 20, 25, 0.85);
+                background: rgba(20, 20, 25, 0.7);
+                backdrop-filter: blur(20px);
                 border-radius: 0px;
                 border: none;
                 box-shadow: 0 25px 50px rgba(0,0,0,0.8);
@@ -303,6 +342,12 @@
                 flex-direction: column;
                 position: relative;
                 overflow: hidden;
+                transform: translateY(100vh);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #chat-overlay.active .phone-frame {
+                transform: translateY(0);
         }
 
         @media(min-width: 480px) {
@@ -582,7 +627,6 @@
     <div id="mediaContainer"></div>
     <div id="videoContainer"></div>
 
-    <!-- BOTTOM FIXED BAR -->
     <div id="now-playing-bar">
         <div class="np-main-row">
             <span id="np-title">No Track Playing</span>
@@ -628,6 +672,17 @@
         // --- PROXY API CONFIGURATION ---
         const PROXY_API_URL = 'https://doodle.sadkid-loneone.workers.dev/';
         const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/`;
+
+        // AUTOMATIC CDN IMAGE FALLBACK SYSTEM
+        window.addEventListener('error', function (e) {
+            if (e.target.tagName === 'IMG') {
+                const imageName = e.target.src.split('/').pop();
+                const githubCDNUrl = `https://cdn.jsdelivr.net/gh/${GITHUB_USERNAME}/${REPO_NAME}@main/${imageName}`;
+                if (e.target.src !== githubCDNUrl) {
+                    e.target.src = githubCDNUrl;
+                }
+            }
+        }, true);
 
         const discordVideos = [
             { name: "YouTube Shorts Embedding", url: "https://www.youtube-nocookie.com/embed/1PUy0vda9CA" }
@@ -750,7 +805,6 @@
                 trackList.push({ name: file.name, audioObj: player });
 
                 player.addEventListener('play', function() {
-                    // Pause other players
                     trackList.forEach(item => {
                         if (item.audioObj !== player) item.audioObj.pause();
                     });
@@ -908,7 +962,7 @@
             }
         }
 
-        // --- REAL DATA STATE ENGINE ---
+        // --- CHAT ENGINE & ANIMATIONS ---
         let currentUser = localStorage.getItem('chat_user') || null;
         let authMode = 'login'; 
         let showRequestsPanel = false;
@@ -927,14 +981,22 @@
 
         function toggleChat(show) {
             const overlay = document.getElementById('chat-overlay');
-            overlay.style.display = show ? 'flex' : 'none';
+            const msgBtn = document.getElementById('messages-btn');
+
             if (show) {
+                // Button jumps down out of view, overlay fades in and slides app up
+                msgBtn.classList.add('hide-down');
+                overlay.classList.add('active');
                 showRequestsPanel = false;
                 activeChatTarget = null;
                 lastFeedbackMsg = "";
                 lastFeedbackType = "";
                 if (currentUser) syncUserData();
                 renderChatSystem();
+            } else {
+                // Button jumps back up, overlay fades out and app slides down
+                msgBtn.classList.remove('hide-down');
+                overlay.classList.remove('active');
             }
         }
 
