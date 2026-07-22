@@ -25,7 +25,7 @@
         body { 
                 font-family: 'AKIRA', sans-serif; 
                 color: white; 
-                padding: 20px 20px 80px 20px; 
+                padding: 20px 20px 120px 20px; 
                 display: flex; 
                 flex-direction: column; 
                 align-items: center; 
@@ -106,6 +106,7 @@
                 margin-bottom: 5px;
         }
 
+        /* --- LEGACY AUDIO PLAYER STYLES --- */
         audio {
                 width: 100%;
                 height: 40px;
@@ -133,6 +134,98 @@
         audio:hover { opacity: 1; box-shadow: 0 0 30px rgba(255, 255, 255, 0.18); }
         audio:hover::-webkit-media-controls-enclosure { background-color: rgba(255, 255, 255, 0.18) !important; box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(0, 0, 0, 0.2); }
 
+        /* --- FLOATING BOTTOM BAR STYLES --- */
+        #now-playing-bar {
+                position: fixed;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%) translateY(120px);
+                width: 95%;
+                max-width: 480px;
+                background: #0f1115;
+                border-radius: 12px;
+                padding: 10px 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                opacity: 0;
+                z-index: 1500;
+                pointer-events: none;
+        }
+
+        #now-playing-bar.active {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+        }
+
+        .np-main-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+        }
+
+        #np-title {
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 12px;
+                font-weight: bold;
+                color: #ffffff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 250px;
+        }
+
+        .np-controls {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+        }
+
+        .np-btn {
+                background: none;
+                border: none;
+                color: #ffffff;
+                font-size: 14px;
+                cursor: pointer;
+                padding: 2px;
+        }
+
+        .np-progress-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+        }
+
+        .np-time {
+                font-family: 'SFProDisplay', sans-serif;
+                font-size: 9px;
+                color: #777;
+                min-width: 26px;
+        }
+
+        .np-slider-container {
+                flex: 1;
+                height: 3px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 3px;
+                cursor: pointer;
+                position: relative;
+        }
+
+        #np-progress-bar {
+                width: 0%;
+                height: 100%;
+                background: #ffffff;
+                border-radius: 3px;
+                pointer-events: none;
+        }
+
         .ripple-effect { position: absolute; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transform: scale(0); animation: ripple-animation 0.5s ease-out; pointer-events: none; }
         @keyframes ripple-animation { to { transform: scale(4); opacity: 0; } }
 
@@ -159,9 +252,7 @@
         }
         #discord-btn img { width: 20px; height: 20px; margin-right: 10px; }
         #discord-btn:hover { box-shadow: 0 0 25px rgba(88, 101, 242, 0.8); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.05); }
-        #discord-btn .ripple-effect { background: rgba(255, 255, 255, 0.6); }
 
-        /* --- MESSAGES FEATURE STYLES --- */
         #messages-btn {
                 position: fixed;
                 bottom: 75px;
@@ -324,7 +415,6 @@
                 margin-bottom: 5px;
         }
 
-        /* --- DYNAMIC INDICATOR STYLES --- */
         .friend-status-feedback {
                 font-family: 'SFProDisplay', sans-serif;
                 font-size: 12px;
@@ -333,7 +423,7 @@
                 display: none;
                 font-weight: bold;
                 letter-spacing: 0.5px;
-                }
+        }
         .feedback-success { color: #2ed573; }
         .feedback-error { color: #ff4757; }
 
@@ -492,6 +582,25 @@
     <div id="mediaContainer"></div>
     <div id="videoContainer"></div>
 
+    <!-- BOTTOM FIXED BAR -->
+    <div id="now-playing-bar">
+        <div class="np-main-row">
+            <span id="np-title">No Track Playing</span>
+            <div class="np-controls">
+                <button class="np-btn" onclick="playPrevTrack()">⏮</button>
+                <button class="np-btn" id="np-play-btn" onclick="togglePlayPause()">⏸</button>
+                <button class="np-btn" onclick="playNextTrack()">⏭</button>
+            </div>
+        </div>
+        <div class="np-progress-wrapper">
+            <span class="np-time" id="np-curr-time">0:00</span>
+            <div class="np-slider-container" onclick="seekTrack(event)">
+                <div id="np-progress-bar"></div>
+            </div>
+            <span class="np-time" id="np-total-time">0:00</span>
+        </div>
+    </div>
+
     <div id="messages-btn" onclick="toggleChat(true)">
         MESSAGES
     </div>
@@ -512,7 +621,6 @@
             </div>
         </div>
     </div>
-
 <script>
         const GITHUB_USERNAME = 'D4RKS0UL8';
         const REPO_NAME = 'the-songs-and-videos';
@@ -526,6 +634,77 @@
         ];
 
         let currentlyPlayingMedia = null;
+        let trackList = [];
+        let currentTrackIndex = -1;
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds === Infinity) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function togglePlayPause() {
+            if (!currentlyPlayingMedia) return;
+            if (currentlyPlayingMedia.paused) {
+                currentlyPlayingMedia.play();
+                document.getElementById('np-play-btn').innerText = '⏸';
+            } else {
+                currentlyPlayingMedia.pause();
+                document.getElementById('np-play-btn').innerText = '▶';
+            }
+        }
+
+        function seekTrack(e) {
+            if (!currentlyPlayingMedia || !currentlyPlayingMedia.duration) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const newTime = (clickX / rect.width) * currentlyPlayingMedia.duration;
+            currentlyPlayingMedia.currentTime = newTime;
+        }
+
+        function playNextTrack() {
+            if (trackList.length === 0 || currentTrackIndex === -1) return;
+            const nextIndex = (currentTrackIndex + 1) % trackList.length;
+            playTrackByIndex(nextIndex);
+        }
+
+        function playPrevTrack() {
+            if (trackList.length === 0 || currentTrackIndex === -1) return;
+            const prevIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
+            playTrackByIndex(prevIndex);
+        }
+
+        function playTrackByIndex(index) {
+            if (index < 0 || index >= trackList.length) return;
+            currentTrackIndex = index;
+            const track = trackList[index];
+
+            if (currentlyPlayingMedia && currentlyPlayingMedia !== track.audioObj) {
+                currentlyPlayingMedia.pause();
+            }
+
+            currentlyPlayingMedia = track.audioObj;
+            document.getElementById('np-title').innerText = track.name;
+            document.getElementById('now-playing-bar').classList.add('active');
+
+            currentlyPlayingMedia.currentTime = 0;
+            currentlyPlayingMedia.play();
+            document.getElementById('np-play-btn').innerText = '⏸';
+
+            currentlyPlayingMedia.ontimeupdate = () => {
+                const cur = currentlyPlayingMedia.currentTime;
+                const dur = currentlyPlayingMedia.duration || 0;
+                const pct = dur ? (cur / dur) * 100 : 0;
+                document.getElementById('np-progress-bar').style.width = `${pct}%`;
+                document.getElementById('np-curr-time').innerText = formatTime(cur);
+                document.getElementById('np-total-time').innerText = formatTime(dur);
+            };
+
+            currentlyPlayingMedia.onended = () => {
+                playNextTrack();
+            };
+        }
 
         function createRipple(e, element) {
             const circle = document.createElement('span');
@@ -561,7 +740,45 @@
             const streamUrl = customUrl || `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${REPO_NAME}/main/${encodeURIComponent(file.name)}`;
 
             let player;
-            if (streamUrl.includes('youtube.com/embed/')) {
+            if (type === 'audio') {
+                player = document.createElement('audio');
+                player.controls = true;
+                player.src = streamUrl;
+                player.preload = "metadata";
+
+                const trackIdx = trackList.length;
+                trackList.push({ name: file.name, audioObj: player });
+
+                player.addEventListener('play', function() {
+                    // Pause other players
+                    trackList.forEach(item => {
+                        if (item.audioObj !== player) item.audioObj.pause();
+                    });
+                    
+                    currentTrackIndex = trackIdx;
+                    currentlyPlayingMedia = player;
+                    document.getElementById('np-title').innerText = file.name;
+                    document.getElementById('now-playing-bar').classList.add('active');
+                    document.getElementById('np-play-btn').innerText = '⏸';
+
+                    player.ontimeupdate = () => {
+                        const cur = player.currentTime;
+                        const dur = player.duration || 0;
+                        const pct = dur ? (cur / dur) * 100 : 0;
+                        document.getElementById('np-progress-bar').style.width = `${pct}%`;
+                        document.getElementById('np-curr-time').innerText = formatTime(cur);
+                        document.getElementById('np-total-time').innerText = formatTime(dur);
+                    };
+
+                    player.onended = () => playNextTrack();
+                });
+
+                player.addEventListener('pause', function() {
+                    if (currentlyPlayingMedia === player) {
+                        document.getElementById('np-play-btn').innerText = '▶';
+                    }
+                });
+            } else if (streamUrl.includes('youtube.com/embed/')) {
                 player = document.createElement('div');
                 player.style.width = "100%";
                 player.style.aspectRatio = "9/16";
@@ -590,6 +807,7 @@
                         currentlyPlayingMedia.pause();
                     }
                     currentlyPlayingMedia = player;
+                    document.getElementById('now-playing-bar').classList.remove('active');
                 });
             }
             card.appendChild(player);
@@ -631,6 +849,7 @@
                 const files = await response.json();
                 container.innerHTML = ''; 
                 videoContainer.innerHTML = '';
+                trackList = [];
 
                 const songs = files.filter(f => 
                     (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
@@ -730,16 +949,16 @@
         }
 
         function togglePasswordVisibility() {
-                const passwordInput = document.getElementById('auth-password');
-                const toggleIcon = document.getElementById('password-toggle');
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggleIcon.src = 'eye-open.png';
-                } else {
-                    passwordInput.type = 'password';
-                    toggleIcon.src = 'eye-closed.png';
-                }
+            const passwordInput = document.getElementById('auth-password');
+            const toggleIcon = document.getElementById('password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.src = 'eye-open.png';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.src = 'eye-closed.png';
+            }
         }
 
         function generateRequestString() {
