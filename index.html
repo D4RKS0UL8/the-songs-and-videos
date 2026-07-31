@@ -974,15 +974,17 @@
                 const songies = files.filter(f => 
                     (f.name.endsWith('.mp3') || f.name.endsWith('.m4a')) &&
                     (f.name.toLowerCase().includes('funk') || 
-                     f.name.toLowerCase().includes('montagem') ||
-                     f.name.toLowerCase().includes('hardtekk') ||
-                     f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
-                     f.name.includes('HOLLOW') ||
-                     f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
-                     f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
-                     f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
-                     f.name.includes('TRETAMENTO'))
+                    f.name.toLowerCase().includes('montagem') ||
+                    f.name.toLowerCase().includes('hardtekk') ||
+                    f.name.includes('FINAL_ROUND_SUPER_SLOWED.mp3') ||
+                    f.name.includes('HOLLOW') ||
+                    f.name.includes('𝐦𝐮𝐭𝐢𝐥𝐚𝐭𝐨𝐫 (𝐬𝐥𝐨𝐰𝐞𝐝).mp3') ||
+                    f.name.includes('Z-SENTAR') || f.name.includes('TOCA PESADO') || 
+                    f.name.includes('JOGO MORTO') || f.name.includes('TOMA NA MENTE') ||
+                    f.name.includes('TRETAMENTO'))
                 );
+
+
 
                 const gitHubVideos = files.filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov'));
 
