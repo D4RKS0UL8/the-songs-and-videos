@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="siteicon.png">
     
     <!-- Primary Meta Tags -->
+    <title>The Songs and Videos</title>
     <meta name="title" content="The Songs and Videos">
     <meta name="description" content="Check out my collection of songs and videos!">
 
@@ -851,14 +852,57 @@
                     }
                 });
             } else if (streamUrl.includes('youtube.com/embed/')) {
-                player = document.createElement('iframe');
-                player.src = streamUrl;
+                player = document.createElement('div');
                 player.style.width = "100%";
                 player.style.aspectRatio = "9/16";
-                player.style.border = "none";
-                player.style.borderRadius = "12px";
-                player.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                player.allowFullscreen = true;
+                player.style.position = "relative";
+                player.style.cursor = "pointer";
+                player.style.borderRadius = "8px";
+                player.style.overflow = "hidden";
+                player.style.background = "#000";
+
+                const videoId = streamUrl.split('embed/')[1].split('?')[0];
+
+                const img = document.createElement('img');
+                img.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                img.style.width = "100%";
+                img.style.height = "100%";
+                img.style.objectFit = "cover";
+                img.style.opacity = "0.8";
+
+                const playBtn = document.createElement('button');
+                playBtn.innerText = "▶";
+                playBtn.style.position = "absolute";
+                playBtn.style.top = "50%";
+                playBtn.style.left = "50%";
+                playBtn.style.transform = "translate(-50%, -50%)";
+                playBtn.style.background = "rgba(255, 0, 0, 0.8)";
+                playBtn.style.color = "white";
+                playBtn.style.border = "none";
+                playBtn.style.borderRadius = "12px";
+                playBtn.style.padding = "15px 25px";
+                playBtn.style.fontSize = "1.5rem";
+                playBtn.style.pointerEvents = "none";
+
+                player.appendChild(img);
+                player.appendChild(playBtn);
+
+                player.addEventListener('click', function() {
+                    const iframe = document.createElement('iframe');
+                    iframe.setAttribute('src', `${streamUrl}?autoplay=1`);
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', '1');
+                    iframe.style.width = "100%";
+                    iframe.style.height = "100%";
+                    iframe.style.position = "absolute";
+                    iframe.style.top = "0";
+                    iframe.style.left = "0";
+                    iframe.style.borderRadius = "8px";
+                    
+                    this.innerHTML = '';
+                    this.appendChild(iframe);
+                });
             } else {
                 player = document.createElement(type);
                 player.controls = true;
@@ -1145,9 +1189,8 @@
                 }
             } catch (err) {
                 console.error(err);
-            }
+            } 
         }
-
         function renderChatSystem() {
             const container = document.getElementById('chat-system-content');
             const backBtn = document.getElementById('header-back-action');
