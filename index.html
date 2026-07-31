@@ -851,25 +851,16 @@
                         document.getElementById('np-play-btn').innerText = '▶';
                     }
                 });
-            } else if (streamUrl.includes('youtube.com/embed/')) {
-                player = document.createElement('div');
-                player.style.width = "100%";
-                player.style.aspectRatio = "9/16";
-                player.style.minHeight = "450px";
-                player.style.display = "flex";
-                player.style.alignItems = "center";
-                player.style.justifyContent = "center";
-                player.style.background = "rgba(0,0,0,0.4)";
-                player.style.borderRadius = "8px";
-                player.style.border = "1px dashed rgba(255,255,255,0.1)";
-                
-                const playBtn = document.createElement('button');
-                playBtn.className = 'auth-btn';
-                playBtn.style.marginTop = "0";
-                playBtn.innerText = "▶ WATCH ON YOUTUBE";
-                playBtn.onclick = () => window.open(streamUrl.replace('embed/', 'shorts/'), '_blank');
-                player.appendChild(playBtn);
-            } else {
+        } else if (streamUrl.includes('youtube.com/embed/')) {
+            player = document.createElement('iframe');
+            player.src = streamUrl;
+            player.style.width = "100%";
+            player.style.aspectRatio = "9/16";
+            player.style.border = "none";
+            player.style.borderRadius = "12px";
+            player.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            player.allowFullscreen = true;
+        } else {
                 player = document.createElement(type);
                 player.controls = true;
                 player.src = streamUrl;
