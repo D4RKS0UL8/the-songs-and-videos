@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Watermark Commissions</title>
+    <style>
+        @font-face {
+            font-family: 'SFProDisplay';
+            src: local('SFProDisplay'), url('https://cdn.jsdelivr.net/gh/D4RKS0UL8/the-songs-and-videos@main/SFProDisplay-Bold.otf') format('opentype');
+            font-weight: bold;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'SFProDisplay', sans-serif;
+            color: white;
+            background-color: #050507;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(86, 33, 143, 0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(143, 33, 75, 0.4), transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(33, 114, 143, 0.3), transparent 50%);
+            background-size: 200% 200%;
+            background-attachment: fixed;
+            animation: fluidBlur 15s ease infinite alternate;
+            min-height: 100vh;
+        }
+
+        @keyframes fluidBlur {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 50% 100%; }
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-shadow: 0 5px 15px rgba(255,255,255,0.2);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(25, 25, 30, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2);
+            backdrop-filter: blur(25px) saturate(150%);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.3);
+        }
+
+        .card-gif {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #000;
+            z-index: 2;
+        }
+
+        .card-details {
+            margin-top: -20px;
+            padding: 35px 15px 15px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+            z-index: 1;
+            transform: translateY(0);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+        }
+        .detail-row span {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .btn-red {
+            background: linear-gradient(135deg, #a30000, #ff1a1a);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-family: 'SFProDisplay', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-red:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.5);
+        }
+
+        /* App-like Modal Overlay */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(20, 20, 25, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            backdrop-filter: blur(30px);
+            transform: scale(0.8) translateY(50px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-gif {
+            width: 100%;
+            height: 220px;
+            border-radius: 20px;
+            object-fit: cover;
+            margin-bottom: -15px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .modal-details {
+            background: rgba(0,0,0,0.4);
+            padding: 30px 15px 15px 15px;
+            border-radius: 0 0 20px 20px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            color: #ddd;
+            text-align: center;
+        }
+
+        .form-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'SFProDisplay', sans-serif;
+            text-align: center;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #2ed573;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #1e824c, #2ed573);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            margin-top: 15px;
+            font-family: 'SFProDisplay', sans-serif;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            box-shadow: 0 10px 25px rgba(46, 213, 115, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn-submit:disabled {
+            background: #555;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 36px;
+            height: 36px;
+            background: #ff4757;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+            border: 2px solid #222;
+            z-index: 10;
+        }
+
+        .status-msg {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .status-success { color: #2ed573; }
+        .status-error { color: #ff4757; }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">WATERMARK COMMISSIONS</div>
+    <div class="grid-container" id="grid"></div>
+
+    <div id="overlay" onclick="closeModal(event)">
+        <div class="modal-card" id="modal" onclick="event.stopPropagation()">
+            <div class="close-btn" onclick="closeModal(event)">✕</div>
+            <img class="modal-gif" id="m-gif" src="">
+            <div class="modal-details" id="m-details"></div>
+            
+            <div class="form-group">
+                <label>Enter name for Watermark</label>
+                <input type="text" id="wm-custom-name" class="form-input" placeholder="e.g. D4RKS0UL_8">
+                <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Submit</button>
+                <div class="status-msg" id="status-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WORKER_URL = 'https://doodle.sadkid-loneone.workers.dev/wms.txt';
+        const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1535044053945684088/9yKUQvMohPFSxoa4Di8nFDYDazHGvrwlN-sDE5Zhh4LhZXxjdMVzi35LXUGqR60yvv8K';
+
+        let activeTemplate = "";
+
+        async function loadTemplates() {
+            const grid = document.getElementById('grid');
+            try {
+                // Adjust fetch logic if your worker needs a specific POST format.
+                const res = await fetch(WORKER_URL);
+                if (!res.ok) throw new Error('Failed');
+                const text = await res.text();
+                
+                const items = text.split(';').filter(i => i.trim() !== '');
+                items.forEach(item => {
+                    const [gif, name, type, price, availability] = item.split(',');
+                    if(!name) return;
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <img class="card-gif" src="${gif.trim()}">
+                        <div class="card-details">
+                            <div class="detail-row">wm name: <span>${name.trim()}</span></div>
+                            <div class="detail-row">wm type: <span>${type.trim()}</span></div>
+                            <div class="detail-row">price: <span>${price.trim()}</span></div>
+                            <div class="detail-row">availability: <span>${availability.trim()}</span></div>
+                        </div>
+                        <button class="btn-red" onclick="openModal('${gif.trim()}', '${name.trim()}', '${type.trim()}', '${price.trim()}', '${availability.trim()}')">GET FOR FREE</button>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                grid.innerHTML = `<div style="text-align:center; width:100%; color:#ff4757;">Failed to load data from Worker.</div>`;
+            }
+        }
+
+        function openModal(gif, name, type, price, avail) {
+            document.getElementById('m-gif').src = gif;
+            document.getElementById('m-details').innerHTML = `
+                <div class="detail-row">wm name: <span>${name}</span></div>
+                <div class="detail-row">wm type: <span>${type}</span></div>
+                <div class="detail-row">price: <span>${price}</span></div>
+                <div class="detail-row">availability: <span>${avail}</span></div>
+            `;
+            activeTemplate = name;
+            
+            document.getElementById('wm-custom-name').value = '';
+            const status = document.getElementById('status-display');
+            status.style.opacity = '0';
+            status.className = 'status-msg';
+            
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closeModal(e) {
+            if(e) e.stopPropagation();
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        async function submitOrder() {
+            const customName = document.getElementById('wm-custom-name').value.trim();
+            const status = document.getElementById('status-display');
+            const btn = document.getElementById('submit-btn');
+
+            if (!customName) {
+                showStatus('Please enter a watermark name.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+
+            const payload = {
+                content: "🚨 **New Watermark Request!**",
+                embeds: [{
+                    title: "Order Details",
+                    color: 16711680,
+                    fields: [
+                        { name: "Requested Text", value: `\`${customName}\``, inline: true },
+                        { name: "Template Name", value: `\`${activeTemplate}\``, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showStatus('Request Sent Successfully!', 'success');
+                    setTimeout(closeModal, 2000);
+                } else {
+                    throw new Error('Webhook error');
+                }
+            } catch (err) {
+                showStatus('Failed to send. Try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Submit";
+            }
+        }
+
+        function showStatus(msg, type) {
+            const status = document.getElementById('status-display');
+            status.innerText = msg;
+            status.className = `status-msg status-${type}`;
+            status.style.opacity = '1';
+            
+            if(type === 'success') {
+                status.animate([
+                    { transform: 'scale(0.9)', opacity: 0 },
+                    { transform: 'scale(1.1)', opacity: 1 },
+                    { transform: 'scale(1)' }
+                ], { duration: 400, easing: 'ease-out' });
+            }
+        }
+
+        window.onload = loadTemplates;
+    </script>
+</body>
+</html>
