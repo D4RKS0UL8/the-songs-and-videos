@@ -269,10 +269,8 @@
         .status-error { color: #ff4757; }
         .watermark-text {
             --speed: 1.0s;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            text-align: center;
+            margin: 30px 0 10px 0;
             font-family: 'SFProDisplay', sans-serif;
             font-size: 14px;
             font-weight: bold;
@@ -282,7 +280,6 @@
             -webkit-text-fill-color: transparent;
             animation: pastelShift var(--speed) linear infinite;
             will-change: background-position;
-            z-index: 1000;
         }
 
         @keyframes pastelShift {
@@ -294,10 +291,12 @@
 </head>
 <body>
     
-    <div class="watermark-text">more watermarks soon, stay tuned please.</div>
     <div class="header-title">WATERMARK COMMISSIONS</div>
     <div class="grid-container" id="grid"></div>
 
+    <!-- Add the dynamic text here so it stays at the end of the list -->
+    <div class="watermark-text">more watermarks soon, stay tuned please.</div>
+    
     <div id="overlay" onclick="closeModal(event)">
         <div class="modal-card" id="modal" onclick="event.stopPropagation()">
             <div class="close-btn" onclick="closeModal(event)">✕</div>
