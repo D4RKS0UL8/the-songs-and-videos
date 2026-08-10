@@ -268,7 +268,7 @@
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
         .watermark-text {
-            --speed: 1.0s;
+            --speed: 0.80s;
             text-align: center;
             padding: 40px 0 10px 0;
             font-family: 'SFProDisplay', sans-serif;
@@ -280,12 +280,12 @@
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pastelWave var(--speed) linear infinite;
+            animation: rgbWave var(--speed) linear infinite;
             will-change: background-position;
             width: 100%;
         }
 
-        @keyframes pastelWave {
+        @keyframes rgbWave {
             0% { background-position: 0% 50%; }
             100% { background-position: 100% 50%; }
         }
