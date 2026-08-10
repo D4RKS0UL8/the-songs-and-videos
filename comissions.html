@@ -270,16 +270,19 @@
         .watermark-text {
             --speed: 1.0s;
             text-align: center;
-            margin: 30px 0 10px 0;
+            padding: 40px 0 10px 0;
             font-family: 'SFProDisplay', sans-serif;
             font-size: 14px;
             font-weight: bold;
-            background: linear-gradient(315deg, #ffb3ba, #baffc9, #bae1ff, #ffffba, #ffb3ba);
-            background-size: 80% 80%;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(315deg, #ffb3ba, #ff6961, #ffffba, #ffb3ba);
+            background-size: 150% 150%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: pastelShift var(--speed) linear infinite;
             will-change: background-position;
+            width: 100%;
         }
 
         @keyframes pastelShift {
