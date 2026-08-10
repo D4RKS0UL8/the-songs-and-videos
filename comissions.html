@@ -268,26 +268,25 @@
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
         .watermark-text {
-            --speed: 0.80s;
+            --speed: 3.0s;
             text-align: center;
-            padding: 40px 0 10px 0;
-            font-family: 'SFProDisplay', sans-serif;
-            font-size: 14px;
+            font-family: sans-serif;
+            font-size: 18px;
             font-weight: bold;
-            background: linear-gradient(90deg, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #ffb3ba);
-            background-size: 150% 150%;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #ffb3ba);
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pastelShift var(--speed) linear infinite;
+            animation: rgbWave var(--speed) linear infinite;
             will-change: background-position;
-            z-index: 1000;
         }
 
-        @keyframes pastelShift {
+        @keyframes rgbWave {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
+
     </style>
 </head>
 <body>
