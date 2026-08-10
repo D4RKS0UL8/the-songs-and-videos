@@ -269,25 +269,26 @@
         .status-error { color: #ff4757; }
         .watermark-text {
             --speed: 0.80s;
-            text-align: center;
-            padding: 40px 0 10px 0;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             font-family: 'SFProDisplay', sans-serif;
             font-size: 14px;
             font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
             background: linear-gradient(90deg, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #ffb3ba);
-            background-size: 300% 100%;
+            background-size: 150% 150%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: rgbWave var(--speed) linear infinite;
+            animation: pastelShift var(--speed) linear infinite;
             will-change: background-position;
-            width: 100%;
+            z-index: 1000;
         }
 
-        @keyframes rgbWave {
+        @keyframes pastelShift {
             0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
