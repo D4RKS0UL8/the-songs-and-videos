@@ -268,6 +268,7 @@
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
         .watermark-text {
+            --speed: 1.0s;
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -275,11 +276,12 @@
             font-family: 'SFProDisplay', sans-serif;
             font-size: 14px;
             font-weight: bold;
-            background: linear-gradient(315deg, #ffb3ba, #baffc9, #bae1ff, #ffffba);
-            background-size: 300% 300%;
+            background: linear-gradient(315deg, #ffb3ba, #baffc9, #bae1ff, #ffffba, #ffb3ba);
+            background-size: 150% 150%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pastelShift 6s ease infinite;
+            animation: pastelShift var(--speed) linear infinite;
+            will-change: background-position;
             z-index: 1000;
         }
 
