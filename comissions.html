@@ -267,10 +267,32 @@
         
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
+        .watermark-text {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'SFProDisplay', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            background: linear-gradient(315deg, #ffb3ba, #baffc9, #bae1ff, #ffffba);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pastelShift 6s ease infinite;
+            z-index: 1000;
+        }
+
+        @keyframes pastelShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 <body>
-
+    
+    <div class="watermark-text">more watermarks soon, stay tuned please.</div>
     <div class="header-title">WATERMARK COMMISSIONS</div>
     <div class="grid-container" id="grid"></div>
 
