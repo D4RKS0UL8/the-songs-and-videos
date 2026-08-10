@@ -268,7 +268,7 @@
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
         .watermark-text {
-            --speed: 0.80s;
+            --speed: 1.0s;
             text-align: center;
             padding: 40px 0 10px 0;
             font-family: 'SFProDisplay', sans-serif;
@@ -276,20 +276,18 @@
             font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
-            background: linear-gradient(315deg, #ffb3ba, #bae1ff, #ff6961, #ffb3ba, #ffffba, #ffffba, #ffb3ba);
-            background-size: 150% 150%;
+            background: linear-gradient(90deg, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #ffb3ba);
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pastelShift var(--speed) linear infinite;
+            animation: pastelWave var(--speed) linear infinite;
             will-change: background-position;
             width: 100%;
         }
 
-        @keyframes pastelShift {
+        @keyframes pastelWave {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-    
+            100% { background-position: 100% 50%; }
         }
     </style>
 </head>
