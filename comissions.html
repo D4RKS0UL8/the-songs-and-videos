@@ -149,9 +149,15 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.8);
             backdrop-filter: blur(30px);
             transform: scale(0.8) translateY(50px);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+
+        .modal-card.has-error {
+            border-color: #ff4757 !important;
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.6), inset 0 0 10px rgba(255, 71, 87, 0.3) !important;
         }
 
         #overlay.active .modal-card {
@@ -185,6 +191,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
@@ -210,13 +217,100 @@
             border-color: #2ed573;
         }
 
+        /* Custom Vibe Dropdown */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            user-select: none;
+        }
+
+        .dropdown-trigger {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-trigger:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .dropdown-selected-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-arrow {
+            font-size: 11px;
+            color: #888;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-dropdown.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 28, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+            animation: menuFade 0.2s ease-out;
+        }
+
+        @keyframes menuFade {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-dropdown.open .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
         .btn-submit {
             background: linear-gradient(135deg, #1e824c, #2ed573);
             color: white;
             border: none;
             padding: 16px;
             border-radius: 14px;
-            margin-top: 15px;
+            margin-top: 10px;
             font-family: 'SFProDisplay', sans-serif;
             font-weight: bold;
             font-size: 15px;
@@ -267,6 +361,7 @@
         
         .status-success { color: #2ed573; }
         .status-error { color: #ff4757; }
+        
         .watermark-text {
             --speed: 3.0s;
             text-align: center;
@@ -294,7 +389,6 @@
     <div class="header-title">WATERMARK COMMISSIONS</div>
     <div class="grid-container" id="grid"></div>
 
-    <!-- Add the dynamic text here so it stays at the end of the list -->
     <div class="watermark-text">more watermarks soon, stay tuned please.</div>
     
     <div id="overlay" onclick="closeModal(event)">
@@ -305,10 +399,38 @@
             
             <div class="form-group">
                 <label for="wm-custom-name">Enter name for Watermark</label>
-                <input type="text" id="wm-custom-name" class="form-input" placeholder="e.g. D4RKS0UL_8">
-                <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Submit</button>
-                <div class="status-msg" id="status-display"></div>
+                <input type="text" id="wm-custom-name" class="form-input" placeholder="e.g. D4RKS0UL_8" oninput="clearErrorState()">
             </div>
+
+            <div class="form-group">
+                <label>Upload destination:</label>
+                <div class="custom-dropdown" id="dest-dropdown">
+                    <div class="dropdown-trigger" onclick="toggleDropdown(event)">
+                        <div class="dropdown-selected-info" id="selected-info">
+                            <span style="color:#aaa;">Select Platform...</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="selectDestination('YouTube', 'ytb.png')">
+                            <img src="ytb.png" alt="YouTube" class="dropdown-icon">
+                            <span>YouTube</span>
+                        </div>
+                        <div class="dropdown-item" onclick="selectDestination('Discord', 'dc.png')">
+                            <img src="dc.png" alt="Discord" class="dropdown-icon">
+                            <span>Discord</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="dynamic-dest-group" style="display: none;">
+                <label id="dynamic-dest-label"></label>
+                <input type="text" id="dynamic-dest-input" class="form-input" placeholder="" oninput="clearErrorState()">
+            </div>
+
+            <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Submit</button>
+            <div class="status-msg" id="status-display"></div>
         </div>
     </div>
 
@@ -317,11 +439,11 @@
         const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1535044053945684088/9yKUQvMohPFSxoa4Di8nFDYDazHGvrwlN-sDE5Zhh4LhZXxjdMVzi35LXUGqR60yvv8K';
 
         let activeTemplate = "";
+        let selectedPlatform = "";
 
         async function loadTemplates() {
             const grid = document.getElementById('grid');
             try {
-                // Adjust fetch logic if your worker needs a specific POST format.
                 const res = await fetch(WORKER_URL);
                 if (!res.ok) throw new Error('Failed');
                 const text = await res.text();
@@ -350,6 +472,48 @@
             }
         }
 
+        function toggleDropdown(e) {
+            e.stopPropagation();
+            const dd = document.getElementById('dest-dropdown');
+            dd.classList.toggle('open');
+        }
+
+        function selectDestination(platform, iconSrc) {
+            selectedPlatform = platform;
+            const selectedInfo = document.getElementById('selected-info');
+            selectedInfo.innerHTML = `
+                <img src="${iconSrc}" class="dropdown-icon" alt="${platform}">
+                <span>${platform}</span>
+            `;
+
+            document.getElementById('dest-dropdown').classList.remove('open');
+
+            const dynamicGroup = document.getElementById('dynamic-dest-group');
+            const dynamicLabel = document.getElementById('dynamic-dest-label');
+            const dynamicInput = document.getElementById('dynamic-dest-input');
+
+            dynamicGroup.style.display = 'flex';
+            dynamicInput.value = '';
+
+            if (platform === 'YouTube') {
+                dynamicLabel.innerText = "Enter Your YouTube Handle To Get Mentioned (Optional)";
+                dynamicInput.placeholder = "e.g. @channel";
+            } else if (platform === 'Discord') {
+                dynamicLabel.innerText = "Enter Your Discord Username (Required)";
+                dynamicInput.placeholder = "e.g. username";
+            }
+
+            clearErrorState();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dd = document.getElementById('dest-dropdown');
+            if (dd && !dd.contains(e.target)) {
+                dd.classList.remove('open');
+            }
+        });
+
         function openModal(gif, name, type, price, avail) {
             document.getElementById('m-gif').src = gif;
             document.getElementById('m-details').innerHTML = `
@@ -359,8 +523,15 @@
                 <div class="detail-row">availability: <span>${avail}</span></div>
             `;
             activeTemplate = name;
+            selectedPlatform = "";
             
             document.getElementById('wm-custom-name').value = '';
+            document.getElementById('selected-info').innerHTML = `<span style="color:#aaa;">Select Platform...</span>`;
+            document.getElementById('dynamic-dest-group').style.display = 'none';
+            document.getElementById('dynamic-dest-input').value = '';
+            
+            clearErrorState();
+
             const status = document.getElementById('status-display');
             status.style.opacity = '0';
             status.className = 'status-msg';
@@ -373,28 +544,55 @@
             document.getElementById('overlay').classList.remove('active');
         }
 
+        function clearErrorState() {
+            document.getElementById('modal').classList.remove('has-error');
+        }
+
         async function submitOrder() {
             const customName = document.getElementById('wm-custom-name').value.trim();
+            const destHandle = document.getElementById('dynamic-dest-input').value.trim();
             const status = document.getElementById('status-display');
             const btn = document.getElementById('submit-btn');
+            const modal = document.getElementById('modal');
+
+            let isInvalid = false;
 
             if (!customName) {
-                showStatus('Please enter a watermark name.', 'error');
+                isInvalid = true;
+            }
+
+            if (selectedPlatform === 'Discord' && !destHandle) {
+                isInvalid = true;
+            }
+
+            if (isInvalid) {
+                modal.classList.add('has-error');
+                showStatus('Please fill in all required fields.', 'error');
                 return;
             }
 
+            clearErrorState();
             btn.disabled = true;
             btn.innerText = "Sending...";
+
+            const payloadFields = [
+                { name: "Requested Text", value: `\`${customName}\``, inline: true },
+                { name: "Template Name", value: `\`${activeTemplate}\``, inline: true }
+            ];
+
+            if (selectedPlatform) {
+                payloadFields.push({ name: "Upload Destination", value: `\`${selectedPlatform}\``, inline: true });
+                if (destHandle) {
+                    payloadFields.push({ name: selectedPlatform === 'YouTube' ? "YouTube Handle" : "Discord Username", value: `\`${destHandle}\``, inline: true });
+                }
+            }
 
             const payload = {
                 content: "<@1429031645322936441> **New Watermark Request!** [From Here](https://d4rks0ul8.github.io/the-songs-and-videos/comissions.html)",
                 embeds: [{
                     title: "Order Details",
                     color: 16711680,
-                    fields: [
-                        { name: "Requested Text", value: `\`${customName}\``, inline: true },
-                        { name: "Template Name", value: `\`${activeTemplate}\``, inline: true }
-                    ],
+                    fields: payloadFields,
                     timestamp: new Date().toISOString()
                 }]
             };
